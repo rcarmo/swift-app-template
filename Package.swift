@@ -5,19 +5,24 @@ import PackageDescription
 let package = Package(
   name: "Starter",
   platforms: [
-    .iOS(.v17),
     .macOS(.v14),
-    .tvOS(.v17),
-    .visionOS(.v1),
-    .watchOS(.v10),
   ],
   products: [
-    .library(name: "AppCore", targets: ["AppCore"])
+    .library(name: "AppCore", targets: ["AppCore"]),
+    .executable(name: "Starter", targets: ["StarterApp"]),
   ],
   targets: [
     .target(
       name: "AppCore",
       path: "Sources/AppCore",
+      swiftSettings: [
+        .swiftLanguageMode(.v6)
+      ]
+    ),
+    .executableTarget(
+      name: "StarterApp",
+      dependencies: ["AppCore"],
+      path: "Sources/Application",
       swiftSettings: [
         .swiftLanguageMode(.v6)
       ]

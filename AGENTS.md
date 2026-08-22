@@ -2,14 +2,14 @@
 
 ## Mission
 
-Maintain this repository as a small, modern, cross-Apple SwiftUI starter. Prefer clear platform APIs and explicit boundaries over abstractions that exist only to anticipate future scale.
+Maintain this repository as a small, modern, macOS-first SwiftUI starter built with Swift Package Manager. Prefer clear Apple APIs and explicit boundaries over abstractions or platform scaffolding added before a product needs them.
 
 ## Before changing code
 
 1. Read `README.md` and the relevant file under `docs/`.
-2. Inspect `project.yml`, `Package.swift`, and neighboring source files.
-3. For a feature or behavior change, record concise answers to the refinement questions in `docs/REFINEMENT.md` or a feature-specific design note.
-4. Read `.pi/skills/README.md` and load the narrowest matching local skills. Use `swiftui-implementation` as the general SwiftUI orchestrator.
+2. Inspect `Package.swift`, `Makefile`, and neighboring source files.
+3. Record concise refinement answers for feature or behavior changes.
+4. Read `.pi/skills/README.md` and load the narrowest matching local skills.
 
 ## Local skill routing
 
@@ -25,44 +25,44 @@ Maintain this repository as a small, modern, cross-Apple SwiftUI starter. Prefer
 | typography/custom fonts | `apple-typography` |
 | tests | `swift-testing` |
 | style/tool configuration | `swift-style-tooling` |
-| XcodeGen/Package/Make/CI/icons/rename | `apple-project-workflows` |
+| Package.swift/Make/bundling/CI/icons/rename | `apple-project-workflows` |
 | user-facing strings/formatting | `apple-localization` |
 | permissions/data/secrets/network/files | `apple-privacy-security` |
 | distribution | `apple-release` |
-
-Read each selected `SKILL.md` and only the referenced files needed for the task. The mapping from audited upstream skills to local domains is documented in `.pi/skills/README.md`.
 
 ## Architecture rules
 
 - Put value types and pure transformations in `Domain`.
 - Define narrow dependency protocols in `Infrastructure`; inject implementations at the app boundary.
-- Keep shared observable state `@MainActor` and owned with `@State`.
-- Keep views declarative. Move business logic and dependency calls out of `body`.
-- Organise by feature as the app grows; one meaningful type per Swift file.
-- Do not add a third-party dependency without explaining why an Apple API or a small local implementation is insufficient.
-- Do not add UIKit/AppKit wrappers unless SwiftUI lacks the required capability; isolate wrappers behind a platform seam.
+- Keep observable UI state `@MainActor` and owned with `@State`.
+- Keep views declarative and move dependency calls out of `body`.
+- Organise by feature as the app grows; keep one meaningful type per Swift file.
+- Do not add a third-party dependency without explaining why an Apple API or small local implementation is insufficient.
 - Preserve Swift 6 strict-concurrency correctness. Never silence it with broad `@unchecked Sendable` annotations.
+- Keep SwiftPM as the only build graph and dependency source of truth.
 
 ## Design rules
 
-- Start with Apple system containers, controls, fonts, colors, symbols, menus, and presentation APIs.
+- Start with macOS system containers, controls, fonts, colors, symbols, menus, commands, Settings, and presentation APIs.
 - Provide loading, empty, filtered-empty, failure, retry, and populated states.
-- Support Dynamic Type, VoiceOver, Voice Control, keyboard/focus, Reduce Motion, increased contrast, and Differentiate Without Color.
-- Keep touch targets at least 44 by 44 points.
-- Use platform-appropriate navigation rather than forcing identical layouts everywhere.
-- Avoid fixed screen dimensions, color-only meaning, hidden labels, fake macOS chrome, and decorative animation.
+- Support VoiceOver, Voice Control, keyboard/focus, Reduce Motion, increased contrast, and Differentiate Without Color.
+- Avoid fixed window dimensions, color-only meaning, hidden labels, fake macOS chrome, and decorative animation.
+- Defer iPadOS/iOS adaptation until those product phases begin; do not maintain speculative application targets.
 
 ## Style
 
-- Follow the Swift API Design Guidelines and the local formatter/linter configurations.
+- Follow the Swift API Design Guidelines and local formatter/linter configurations.
 - Aim for 100-character lines; 120 is the formatter limit and 140 is a hard lint error.
-- Prefer inferred types where obvious, explicit names over abbreviations, and `ID`/`URL` acronym casing.
-- Prefer `async`/`await`, actors, format styles, Swift-native string APIs, and modern SwiftUI modifiers.
+- Prefer explicit names, Swift-native APIs, `async`/`await`, actors, format styles, and modern SwiftUI modifiers.
 - No force unwraps, force tries, direct `print`, swallowed user-action errors, or secrets in source.
 
-## Generated files
+## Build contract
 
-`Starter.xcodeproj` is generated and ignored. Change `project.yml`, then run `make generate`. Do not commit local Xcode user data, build products, signing material, or notarisation credentials.
+- `Package.swift` defines `AppCore`, the `Starter` executable product, and tests.
+- `scripts/build-macos-app.sh` independently assembles the SwiftPM executable into a macOS `.app` and signs the complete bundle.
+- `Resources/Info.plist` and `Config/Starter.entitlements` own bundle metadata and capabilities.
+- There is no Xcode project, XcodeGen, `xcodebuild`, or Homebrew build dependency.
+- Build output, certificates, profiles, keychains, and notarisation credentials must not be committed.
 
 ## Required validation
 
@@ -70,20 +70,22 @@ Run the strongest available subset and state exactly what was not run:
 
 ```sh
 make validate
+make workflow-test
 make lint
 make test
+make package-build
 make build
-make build-all
 ```
 
-On non-macOS hosts, only `make validate` is expected to work. On a fresh macOS checkout, `make bootstrap` must remain the one-shot default setup/build path and `make bootstrap-all` the full target matrix. Never report native compilation as successful without real Xcode output; mocked Makefile workflow tests prove orchestration only.
+`make build` requires macOS. Mocked workflow tests prove orchestration only; never claim native compilation or launch validation without real Swift and macOS output.
 
 ## Completion checklist
 
 - Behavior has deterministic tests.
 - User-visible failures are presented and recoverable where possible.
-- Accessibility and each target platform have been reviewed.
-- Documentation and `project.yml` match implementation.
-- No generated project, secrets, build output, or signing files are committed.
-- Local skill metadata/index remain valid (`./scripts/check-skills.sh`).
+- macOS behavior, keyboard use, accessibility, and window resizing have been reviewed.
+- Documentation and `Package.swift` match implementation.
+- No generated project, secrets, or build output are committed.
+- Rename changes have been tested in a disposable copy.
+- Local skill metadata/index remain valid.
 - `NOTICE.md` is updated if new source or substantial guidance is incorporated.

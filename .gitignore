@@ -1,15 +1,6 @@
-# Xcode
-DerivedData/
-*.xcuserstate
-xcuserdata/
-*.xccheckout
-
-# SwiftPM
+# SwiftPM and build artifacts
 .build/
 .swiftpm/
-
-# Generated project and build artifacts
-Starter.xcodeproj/
 build/
 dist/
 

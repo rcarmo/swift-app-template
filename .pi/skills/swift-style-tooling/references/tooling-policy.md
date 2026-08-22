@@ -28,4 +28,4 @@ Use the narrowest disable with a comment proving why the pattern is safe and why
 
 ## Version changes
 
-Tool updates can add or rename rules. Update `Brewfile` assumptions, configs, CI, and formatted source together. On CI runner changes, confirm SwiftFormat/SwiftLint support the installed Swift syntax.
+Tool updates can add or rename rules. Update optional installation guidance, configs, CI, and formatted source together. On runner changes, confirm SwiftFormat and SwiftLint support the installed Swift syntax.

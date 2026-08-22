@@ -13,9 +13,9 @@ Use standard SwiftUI containers and controls before drawing custom chrome. Nativ
 
 ## Information architecture
 
-A sidebar represents stable destinations or a selectable collection; it is not decoration. Keep the primary action discoverable, preserve selection, and never leave a blank detail pane. On compact platforms, confirm the same hierarchy reads naturally as push navigation.
+A sidebar represents stable destinations or a selectable collection; it is not decoration. Keep the primary action discoverable, preserve selection, and never leave a blank detail pane.
 
-On macOS, respect the title bar and toolbar rather than imitating web or iOS chrome. Add menu commands and conventional shortcuts for primary actions. Settings belong in a `Settings` scene. Avoid replacing native window controls.
+Respect the title bar and toolbar rather than imitating web or iOS chrome. Add menu commands and conventional shortcuts for primary actions. Settings belong in a `Settings` scene. Avoid replacing native window controls.
 
 ## Accessibility acceptance checks
 
@@ -28,8 +28,7 @@ Every screen must be reviewed with:
 - sufficient contrast in light, dark, increased-contrast, and tinted appearances;
 - Differentiate Without Color enabled;
 - Reduce Motion enabled, replacing spatial movement with restrained opacity where needed;
-- minimum 44-by-44-point touch targets on touch platforms;
-- tvOS focus and watchOS compact-layout behavior.
+- keyboard navigation, focus visibility, and sensible pointer targets.
 
 Icon-only visual presentation is acceptable only when the underlying `Button` or `Menu` has a meaningful text label. Decorative images must be hidden from accessibility.
 
@@ -52,9 +51,9 @@ Animate a state change only when motion clarifies cause, continuity, or hierarch
 - Filtering user text uses `localizedStandardContains`.
 - Search should be reachable through the native search field and conventional Find command where applicable.
 - Primary macOS actions should have standard menu commands and keyboard shortcuts.
-- Content-oriented Mac and iPad apps should consider import/export and drag in/out as first-class workflows.
+- Content-oriented Mac apps should consider import/export and drag in/out as first-class workflows.
 - Destructive actions require a clear label, appropriate confirmation, and reversible behavior where feasible.
 
-## Platform review
+## macOS review
 
-A shared code path is not proof of a good shared design. Review screenshots and interaction on each target. Use previews for states, but validate focus, pointer, keyboard, remote, touch, crown, window resizing, localization, and accessibility on devices or simulators.
+Use previews to inspect states, but validate focus, pointer, keyboard commands, window resizing, restoration, localization, permissions, and accessibility in a real assembled application.

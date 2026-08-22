@@ -1,6 +1,6 @@
 ---
 name: swiftui-implementation
-description: Implement, refactor, or review SwiftUI features in this cross-Apple template using modern APIs, maintainable view composition, correct data flow, performance checks, and project validation.
+description: Implement, refactor, or review macOS-first SwiftUI features using modern APIs, maintainable view composition, correct data flow, performance checks, and project validation.
 license: MIT
 metadata:
   version: "2.0"
@@ -45,7 +45,7 @@ Use this as the main entry point for any SwiftUI code change. It orchestrates th
 
 ## Baseline policy
 
-- Use Swift 6 strict concurrency and current APIs available at the deployment targets in `Package.swift` and `project.yml`.
+- Use Swift 6 strict concurrency and current APIs available at the deployment target in `Package.swift`.
 - Prefer pure SwiftUI. Add UIKit/AppKit bridges only when the required capability is unavailable, and isolate the bridge.
 - Do not add third-party packages without explicit justification and approval.
 - Keep one meaningful type per file and organise by feature.

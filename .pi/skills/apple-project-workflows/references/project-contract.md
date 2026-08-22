@@ -1,49 +1,43 @@
-# Project and build contract
+# SwiftPM application contract
 
-## One-shot and daily commands
+## Sources of truth
 
-```sh
-make bootstrap      # fresh Mac: install tools, validate, test, generate, build macOS
-make bootstrap-all  # fresh Mac: same, then build every configured target
-make                # same as make build: validated default native macOS build
-make build-all      # validated iOS/Catalyst/macOS/tvOS/visionOS/watchOS matrix
-make validate       # portable static repository and local-skill checks
-make doctor         # full Xcode selection/first-launch/toolchain preflight
-make app-macos      # ad-hoc signed local bundle in build/
-```
+- `Package.swift`: products, targets, dependencies, deployment version, language mode, tests.
+- `Sources/AppCore`: reusable application library.
+- `Sources/Application`: executable `@main` scene.
+- `Resources/Info.plist`: bundle identity and runtime metadata.
+- `Config/Starter.entitlements`: sandbox and capabilities.
+- `scripts/build-macos-app.sh`: deterministic `.app` assembly and local signing.
+- `Makefile`: public command interface.
 
-`make bootstrap` is idempotent through `brew bundle`; it must leave a generated project and successful default build. The Make dependency graph should execute shared validation, dependency resolution, and generation once per invocation rather than chaining redundant recursive targets. `make validate` checks structure, skills, shell syntax, whitespace, secret patterns, and JSON. It must work without Xcode and must not print a false compile success.
+There is no generated project. SwiftPM compilation must remain usable without Homebrew or an IDE.
 
-## Target changes
+## Adding package code
 
-When adding a platform/extension/widget:
+Put reusable behavior in the narrowest `AppCore` feature/domain/infrastructure location. Add external packages only in `Package.swift`, pin according to project policy, and explain why Apple APIs or a small local implementation are insufficient.
 
-1. add deployment target and target/scheme to `project.yml`;
-2. assign a distinct bundle identifier and correct product type;
-3. define resources and app-extension embedding explicitly;
-4. add minimal entitlements/capabilities;
-5. add Make/CI build coverage;
-6. adapt shared code at a clear platform seam;
-7. document simulator/device/manual validation.
+## App bundle assembly
 
-## Dependencies
+The bundler must:
 
-Prefer Apple frameworks and a small local implementation. A package dependency requires purpose, licence, maintenance/security review, platform support, version strategy, and impact on app size/startup. Add it to `Package.swift` only when shared library code needs it; otherwise configure the owning Xcode target deliberately.
+1. build the named SwiftPM executable product;
+2. create `Contents/MacOS` and `Contents/Resources`;
+3. copy the executable under the app name;
+4. substitute version/build and identity metadata into `Info.plist`;
+5. copy SwiftPM resource bundles and optional `AppIcon.icns`;
+6. install `PkgInfo` and sign the complete bundle with entitlements;
+7. verify the signature and plist.
 
-## Rename helper
+## Rename and icon helpers
 
-The one-shot rename must update package/product names, schemes/targets, app entry filename, entitlements filename/path, bundle-ID family, Make variables, workflows, docs, and local skill examples while excluding itself, `.git`, and build output. Validate a disposable renamed copy and assert no old-name references except the helper's source constants.
+The one-shot rename updates package/product names, app entry filename, entitlements filename/path, bundle IDs, metadata, Make variables, scripts, workflows, docs, and local skill examples. Validate it in a disposable copy and reject stale placeholder references.
 
-## Icons and resources
+The icon helper accepts a 1024-square source and generates `build/AppIcon.icns`. Platform-specific asset catalogs can be introduced only with an actual future platform application.
 
-The helper generates iOS and macOS assets from a 1024-square source. tvOS, watchOS, and visionOS may require platform-specific asset roles/artwork; configure them explicitly rather than implying one universal image satisfies all store requirements. Resource additions must be included by both the package or app target that owns them, not copied ad hoc.
+## Workflow tests
 
-## Makefile orchestration tests
+`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired and failures propagate. It must also prove normal workflows do not invoke Xcode project tooling or Homebrew. This is orchestration evidence, not compilation.
 
-Run `make workflow-test` to test Make target wiring with temporary stub executables for `uname`, `xcodebuild`, `xcrun`, `brew`, `xcodegen`, `swift`, `swiftformat`, and `swiftlint`. It asserts `bootstrap` reaches validate/lint/test/resolve/macOS build, `bootstrap-all` invokes all six build destinations, and native build failures propagate. This proves orchestration only, not Swift compilation.
+## Future iPadOS/iOS work
 
-## CI
-
-CI is opt-in for repositories created from this template. The preserved workflow is `.github/workflows/ci.yml.disabled`; rename it to `ci.yml` and enable it in GitHub Actions only when continuous builds are wanted.
-
-When enabled, Linux performs portable checks. macOS installs tools, generates, lints, tests the package, and builds each platform including Catalyst. Pin or review action/tool changes and update generic destinations when runner Xcode versions change.
+Add a thin platform application consuming `AppCore` only when that phase starts. Keep shared architecture in SwiftPM and isolate bundle/provisioning/platform presentation at the wrapper boundary.

@@ -9,18 +9,17 @@ permissions:
   contents: read
 
 jobs:
-  static:
-    runs-on: ubuntu-latest
+  macos:
+    runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Repository checks
         run: make validate
       - name: Make workflow orchestration
         run: make workflow-test
-
-  macos:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v4
-      - name: Bootstrap and build every Apple target
-        run: make bootstrap-all
+      - name: SwiftPM tests and executable build
+        run: |
+          make test
+          make package-build
+      - name: Assemble macOS application
+        run: make build

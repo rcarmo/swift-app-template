@@ -17,7 +17,7 @@ These skills are self-contained, project-local adaptations arranged by functiona
 | type scale, readable measure, custom fonts | `apple-typography` |
 | unit/model/integration/UI testing | `swift-testing` |
 | naming, readability, SwiftFormat, SwiftLint, logging | `swift-style-tooling` |
-| XcodeGen, Package.swift, Make, CI, rename/icons | `apple-project-workflows` |
+| Package.swift, Make, app bundling, CI, rename/icons | `apple-project-workflows` |
 | String Catalogs, formatting, plurals, RTL | `apple-localization` |
 | permissions, entitlements, privacy, keychain, sandbox | `apple-privacy-security` |
 | signing, notarisation, packaging, store/direct release | `apple-release` |
@@ -43,9 +43,13 @@ Its audited domains are covered locally as follows:
 
 The readability, naming, testing, formatter/linter, logging, sendability, and file-literal guidance is adapted into `swift-style-tooling` and `swift-testing`. The repository uses smaller local `.swiftformat` and `.swiftlint.yml` configurations rather than vendoring Airbnb's command plugin.
 
+### rcarmo/EditorBridge
+
+The first-party MIT-licensed repository provides the implementation precedent for SwiftPM library/executable products, manual macOS `.app` assembly, and bundle-level signing. The local project/release skills adapt that topology to this template's architecture and policies; exact provenance is in `NOTICE.md`.
+
 ### tqbf/swiftui-app
 
-Because the audited repository had no explicit licence, only high-level concepts were independently reimplemented. Build/project/release/rename/icon workflows live in `apple-project-workflows` and `apple-release`; architecture and typography concerns live in `swift-architecture` and `apple-typography`; runtime/layout failure categories are independently reimplemented in `swiftui-hardening`. No unlicensed source skill text or code is copied.
+Because the audited repository had no explicit licence, only high-level concepts were independently reimplemented. SwiftPM build/release/rename/icon ideas are independently expressed in `apple-project-workflows` and `apple-release`; no unlicensed source skill text or code is copied.
 
 ### ceorkm/macos-design-skill
 

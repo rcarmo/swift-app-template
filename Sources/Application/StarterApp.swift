@@ -11,10 +11,8 @@ struct StarterApp: App {
         .environment(model)
     }
 
-    #if os(macOS)
-      Settings {
-        SettingsView()
-      }
-    #endif
+    Settings {
+      SettingsView()
+    }
   }
 }

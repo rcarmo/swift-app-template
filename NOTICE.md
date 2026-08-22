@@ -60,6 +60,35 @@ MIT notice for the audited source:
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
 
+## rcarmo/EditorBridge
+
+- Repository: <https://github.com/rcarmo/EditorBridge>
+- Audited revision: `ab4715b958cf717143f8f958e1e673aef63453d6`
+- Licence in audited repository: MIT
+- Copyright notice: Copyright (c) 2026 Rui Carmo
+- Influence: first-party implementation precedent for SwiftPM library and executable products, a native SwiftUI `@main` application, manual macOS `.app` assembly, and bundle-level code signing without an Xcode project.
+- Reuse boundary: this template independently adapts the public build topology and conventional Apple bundle layout to its existing architecture, release policy, resources, and naming. It does not vendor EditorBridge source files.
+
+MIT notice for the audited source:
+
+> Permission is hereby granted, free of charge, to any person obtaining a copy
+> of this software and associated documentation files (the "Software"), to deal
+> in the Software without restriction, including without limitation the rights
+> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+> copies of the Software, and to permit persons to whom the Software is
+> furnished to do so, subject to the following conditions:
+>
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+>
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
 ## tqbf/swiftui-app
 
 - Repository: <https://github.com/tqbf/swiftui-app>
@@ -84,4 +113,4 @@ The local suite includes original extensions for domains that were referenced or
 
 ## Other tools
 
-This repository names XcodeGen, SwiftFormat, SwiftLint, Homebrew, GitHub Actions, and Apple command-line tools as development dependencies. Their own distributions and repositories retain their respective licences; none of their source code is included here.
+This repository names SwiftFormat, SwiftLint, GitHub Actions, SwiftPM, and Apple command-line tools as optional development or build dependencies. Their own distributions and repositories retain their respective licences; none of their source code is included here. Homebrew may install optional quality tools but is not part of the build contract.

@@ -12,5 +12,5 @@
 --import-grouping testable-bottom
 --self remove
 --trim-whitespace always
---exclude .build,build,dist,Starter.xcodeproj
+--exclude .build,build,dist
 --enable blankLinesBetweenScopes,consecutiveSpaces,duplicateImports,hoistPatternLet,isEmpty,linebreakAtEndOfFile,preferCountWhere,redundantBackticks,redundantParens,redundantReturn,redundantSelf,redundantType,sortImports,trailingCommas,trailingSpace,typeSugar

@@ -74,7 +74,6 @@ jobs:
       - name: Build, notarize and package
         env:
           CERT_NAME: ${{ secrets.CERT_NAME }}
-          TEAM_ID: ${{ secrets.TEAM_ID }}
           NOTARY_PROFILE: ci-notary
         run: make dist VERSION="$RELEASE_VERSION"
       - name: Publish GitHub release
