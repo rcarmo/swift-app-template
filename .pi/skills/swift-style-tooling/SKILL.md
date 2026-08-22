@@ -1,6 +1,6 @@
 ---
 name: swift-style-tooling
-description: Apply or review Swift naming, readability, file organization, formatter/linter policy, logging hygiene, and automated quality gates for this template.
+description: Apply or review Swift naming, readability, file organisation, formatter/linter policy, logging hygiene, and automated quality gates for this template.
 license: MIT
 metadata:
   version: "1.0"
@@ -14,7 +14,7 @@ Read `.swiftformat`, `.swiftlint.yml`, and `references/style-guide.md`. Use when
 ## Principles
 
 - Readability, simplicity, and correctness outrank brevity.
-- Formatting rules should be autocorrectable and behavior-preserving.
+- Formatting rules should be autocorrectable and behaviour-preserving.
 - Lint rules should target correctness, unsafe patterns, or conventions without safe automatic replacement.
 - Follow the Swift API Design Guidelines; local rules supplement rather than contradict them.
 - Do not create noisy rules that train developers to ignore warnings.
@@ -22,9 +22,9 @@ Read `.swiftformat`, `.swiftlint.yml`, and `references/style-guide.md`. Use when
 ## Workflow
 
 1. Write clear code before optimizing line count.
-2. Run `make format` after edits on macOS.
+2. Run `make format` after Swift edits when SwiftFormat and SwiftLint are installed.
 3. Review formatter changes; autocorrection is not a substitute for understanding.
-4. Run `make lint`; commit with zero warnings/errors.
+4. Run `make lint`; commit with zero warnings or errors.
 5. If suppressing a rule, narrow it to one line/scope and explain why the code is safe.
 6. Change config and representative code/tests in the same commit.
 
@@ -38,4 +38,4 @@ Read `.swiftformat`, `.swiftlint.yml`, and `references/style-guide.md`. Use when
 
 ## Output
 
-Distinguish formatter output, lint violations, and human-review guidance. Do not call a personal preference a project rule unless it appears in config or this skill.
+Distinguish formatter output, lint violations, and human-review guidance. Record tool versions when relevant. Do not call a personal preference a project rule unless it appears in configuration or this skill.

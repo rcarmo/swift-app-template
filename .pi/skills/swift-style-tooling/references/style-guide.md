@@ -26,7 +26,7 @@
 - Prefer `some Protocol` for opaque returns/parameters where identity matters; use `any Protocol` for existential storage.
 - Mark classes `final` unless subclassing is designed and tested.
 
-## File organization
+## File organisation
 
 One meaningful type per Swift file. Place extensions next to the type when private/local, or in a named file when they represent a substantial protocol/domain concern. Use `MARK` sections only when a type is large enough to benefit; extracting the type may be better.
 
@@ -36,4 +36,4 @@ Use `Logger` categories and privacy annotations. Never use logs as the only resp
 
 ## Tests
 
-Test names are lower camel case and describe behavior. Avoid private test methods/types unless access control conveys a real constraint. Do not use force unwraps/tries to shorten fixture code.
+Test names are lower camel case and describe behaviour. Avoid private test methods/types unless access control conveys a real constraint. Do not use force unwraps/tries to shorten fixture code.

@@ -1,14 +1,14 @@
 # Design and interaction
 
-## Start with system behavior
+## Start with system behaviour
 
-Use standard SwiftUI containers and controls before drawing custom chrome. Native controls inherit accessibility, focus, platform appearance, input behavior, and future OS improvements.
+Use standard SwiftUI containers and controls before drawing custom chrome. Native controls inherit accessibility, focus, platform appearance, input behaviour, and future OS improvements.
 
 - Use `NavigationStack` or `NavigationSplitView`, never `NavigationView`.
 - Use `Label` for an icon with text.
 - Use `ContentUnavailableView` for empty, search-empty, and unavailable states.
 - Use semantic fonts and hierarchical foreground styles.
-- Prefer SF Symbols and generated asset symbols.
+- Prefer SF Symbols and centralised typed asset references; use generated asset accessors only if a target explicitly enables them.
 - Use `Form` and `LabeledContent` for settings and labelled values.
 
 ## Information architecture
@@ -21,7 +21,7 @@ Respect the title bar and toolbar rather than imitating web or iOS chrome. Add m
 
 Every screen must be reviewed with:
 
-- Dynamic Type at accessibility sizes without clipped actions or lost content;
+- the largest supported macOS text and accessibility settings without clipped actions or lost content;
 - VoiceOver labels, order, traits, values, headings, and actionable controls;
 - Voice Control names that match visible labels;
 - keyboard navigation and Full Keyboard Access;
@@ -34,13 +34,13 @@ Icon-only visual presentation is acceptable only when the underlying `Button` or
 
 ## Layout
 
-Use semantic spacing tokens sparingly. Avoid fixed screen dimensions and `UIScreen.main.bounds`. Allow text to wrap, use readable line lengths, and give controls flexible frames. `GeometryReader` is a last resort after container-relative frames, layout protocols, and visual effects.
+Use semantic spacing tokens sparingly. Avoid fixed screen or window dimensions. Allow text to wrap, use readable line lengths, and give controls flexible frames. `GeometryReader` is a last resort after container-relative frames, layout protocols, and visual effects.
 
 Design empty, loading, failure, permission-denied, offline, and populated states before polishing the happy path. Progressive disclosure is preferable to permanently visible controls with no current purpose.
 
-## Color and typography
+## Colour and typography
 
-Use system semantic colors and materials so contrast and vibrancy adapt. Light and dark appearances are separate design contexts, not simple inversions. Do not encode meaning by color alone. Prefer text styles such as `.body`, `.headline`, and `.largeTitle`; use custom sizes only with Dynamic Type scaling.
+Use system semantic colours and materials so contrast and vibrancy adapt. Light and dark appearances are separate design contexts, not simple inversions. Do not encode meaning by colour alone. Prefer text styles such as `.body`, `.headline`, and `.largeTitle`; scale any necessary custom size relative to a semantic text style.
 
 ## Motion and feedback
 
@@ -52,8 +52,8 @@ Animate a state change only when motion clarifies cause, continuity, or hierarch
 - Search should be reachable through the native search field and conventional Find command where applicable.
 - Primary macOS actions should have standard menu commands and keyboard shortcuts.
 - Content-oriented Mac apps should consider import/export and drag in/out as first-class workflows.
-- Destructive actions require a clear label, appropriate confirmation, and reversible behavior where feasible.
+- Destructive actions require a clear label, appropriate confirmation, and reversible behaviour where feasible.
 
 ## macOS review
 
-Use previews to inspect states, but validate focus, pointer, keyboard commands, window resizing, restoration, localization, permissions, and accessibility in a real assembled application.
+Use previews to inspect states, but validate focus, pointer, keyboard commands, window resizing, restoration, localisation, permissions, and accessibility in a real assembled application.

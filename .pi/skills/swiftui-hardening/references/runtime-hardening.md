@@ -1,6 +1,6 @@
 # SwiftUI runtime hardening
 
-These are investigation heuristics, not unconditional laws. Verify against supported OS versions and the actual hosting context.
+These are investigation heuristics, not unconditional laws. Verify them against supported macOS versions and the actual SwiftUI/AppKit hosting context.
 
 ## Structural transitions and hosting
 
@@ -11,7 +11,7 @@ If insertion/removal with `.transition` crashes or destabilizes a hosted SwiftUI
 - `frame(maxWidth: .infinity)` plus high `layoutPriority` can starve siblings; inspect proposals and use explicit caps/Spacer where appropriate.
 - `fixedSize` makes a view resist compression; reserve it for genuinely inflexible values.
 - Rows need deliberate wrapping/truncation and priorities at narrow widths; do not force every text to one line when content is essential.
-- Centralize repeated named metrics, but avoid a rigid pixel system across platforms.
+- Centralise repeated named metrics, but avoid a rigid pixel system that ignores window size, text scaling, and system control metrics.
 
 ## Observation and stale snapshots
 
@@ -25,12 +25,12 @@ Read settings/state at commit time to avoid overwriting newer mutations. Test ov
 
 ## Lists, scroll views, and hover
 
-- `swipeActions` requires supported list/form context; provide context menus/buttons for other containers and non-touch platforms.
+- Do not design a macOS workflow around `swipeActions`; provide visible controls, context menus, and keyboard commands appropriate to the container.
 - Prefer one reusable row composition rather than forks that drift.
 - Keep hover-revealed controls mounted with opacity and hit-testing so geometry does not jump.
-- On macOS, use actual hover/focus APIs; do not assume an iOS hover modifier behaves identically.
+- Use the macOS hover and focus APIs in the actual hosting context; verify pointer and Full Keyboard Access behaviour live.
 - Verify selection, focus, keyboard actions, scrolling, and deletion after filtering/reordering.
 
 ## Live-run matrix
 
-Repeat rapid toggles, navigation push/pop, modal open/close, window resize, search/filter, delete/undo, background/foreground, appearance changes, Dynamic Type, Reduce Motion, and restoration. Include the lowest supported OS and a lower-spec device/Mac when practical.
+Repeat rapid toggles, navigation changes, modal open/close, window resize/tile/full-screen, search/filter, delete/undo, app activation changes, appearance changes, text scaling, Reduce Motion, and restoration. Include macOS 14 and a lower-spec supported Mac when practical.

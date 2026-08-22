@@ -2,36 +2,38 @@
 
 ## Test shape
 
-Use descriptive lower-camel-case function names that state behavior. Keep Arrange/Act/Assert visually clear without ceremonial comments. Prefer one behavioral reason to fail per test, with several related `#expect` statements allowed.
+Use descriptive lower-camel-case names that state behaviour. Keep setup, action, and expectations visually clear without ceremonial comments. Prefer one behavioural reason to fail per test; several related `#expect` statements are acceptable.
 
 ## Suites and isolation
 
-Struct suites are the default. Annotate a suite or test `@MainActor` when it touches main-actor state. Create a fresh system under test per test. Use temporary directories, in-memory stores, unique database names, and teardown for external resources.
+Struct suites are the default. Mark a suite or test `@MainActor` when it uses main-actor state. Create a fresh system under test per test. Use temporary directories, in-memory stores, unique database names, and cleanup for external resources.
 
 ## Errors and optionals
 
-Use `#expect(throws:)`/`#require` rather than `try!` or force unwrap. A required value should fail at the point it is absent with useful context.
+Use `#expect(throws:)`, `#require`, or a throwing helper rather than `try!` or force unwraps. Fail where a required value is absent and include useful context.
 
-## Parameterized coverage
+## Parameterised coverage
 
-Use parameterized tests for parsing, validation, formatting, route mappings, and state tables. Keep cases named/readable; avoid compressing unrelated behavior into one matrix.
+Use parameterised tests for parsing, validation, formatting, route mappings, and state tables. Keep cases named and readable; do not compress unrelated behaviour into one matrix.
 
-## Asynchronous behavior
+## Asynchronous behaviour
 
-- Await model/service methods directly.
-- Inject a clock or controllable continuation for delayed/debounced behavior.
+- Await model or service methods directly.
+- Inject a clock or controllable continuation for delayed and debounced work.
 - Test cancellation separately from failure.
-- For overlapping requests, hold continuations and resume them out of order to prove stale results cannot commit.
+- Hold and resume continuations out of order to prove stale requests cannot commit.
 - Test actor-isolated state from the correct actor.
 
 ## Dependency fakes
 
-Prefer a small fake matching the protocol semantics. It may return a value/error, record meaningful requests, or suspend under test control. Avoid a generic mock framework and avoid asserting every internal interaction.
+Use a small fake that matches protocol semantics. It can return a value or error, record meaningful requests, or suspend under test control. Avoid a generic mock framework and assertions on every internal call.
 
 ## UI and snapshots
 
-Use previews for rapid state inspection, not as tests. UI tests should use accessibility identifiers only for stable automation hooks; user-facing accessibility labels still need semantic validation. Snapshot tests require a controlled OS/device/font/locale and should focus on stable high-value surfaces.
+Previews help inspect states but are not tests. UI automation may use accessibility identifiers as stable hooks, while user-facing labels still need semantic review. Snapshot tests need a controlled macOS version, appearance, text settings, locale, window size, and rendering scale; use them only for stable high-value surfaces.
 
-## Build matrix
+## Build and application evidence
 
-`swift test` proves the shared package. Build each generated platform target to catch API availability and conditional compilation. Manually run UI changes on representative devices and the lowest supported OS.
+`swift test` runs the `AppCoreTests` target. `make package-build` compiles the `Starter` executable for the package's declared macOS target. Neither proves the `.app` layout, plist substitution, entitlements, signing, launch behaviour, menus, focus, or accessibility.
+
+Run `make build` on macOS for bundle evidence and manually exercise affected UI on the lowest supported macOS version and representative window/input configurations. If a future iPadOS application is added, define and document its own build and device/simulator matrix at that time.

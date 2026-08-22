@@ -1,34 +1,36 @@
 ---
 name: apple-localization
-description: Add or review user-facing strings, String Catalogs, pluralization, formatting, bidirectional layout, locale-sensitive search, and localization tests.
+description: Add or review macOS user-facing strings, String Catalogs, plurals, formatting, bidirectional layout, locale-sensitive search, and localisation tests.
 license: MIT
 metadata:
-  version: "1.0"
-  provenance: Adapted from twostraws hygiene/API guidance and project-specific Apple localization practice; see NOTICE.md.
+  version: "2.0"
+  provenance: Adapted from twostraws hygiene/API guidance and project-specific Apple localisation practice; see NOTICE.md.
 ---
 
-# Apple localization
+# macOS localisation
 
-Read `references/localization-checklist.md`. Use whenever adding user-visible text, dates, numbers, units, names, search, layout direction, screenshots, or store-facing copy.
+Read `references/localization-checklist.md` when adding user-visible text, dates, numbers, units, names, search, layout direction, screenshots, or release-facing copy.
+
+The starter currently has no String Catalog and uses inline English strings. Introduce a catalog deliberately when the derived product adopts localisation; do not claim generated string symbols are enabled unless package/resource configuration proves it.
 
 ## Workflow
 
-1. Inventory every new user-facing string, including errors, accessibility labels, menus, commands, empty states, and permission explanations.
-2. Add symbol-keyed entries to a String Catalog with manual extraction state where the project uses generated symbols.
-3. Use interpolation/plural variation in one localizable unit; do not concatenate translated fragments.
-4. Use `FormatStyle` for dates, numbers, currency, measurement, and person names.
-5. Test long translations, right-to-left layout, non-Latin input, locale-specific calendars/numbers, and accessibility text.
-6. Keep logs, identifiers, protocol payloads, and developer diagnostics separate from localized UI.
+1. Inventory user-facing strings, including errors, accessibility labels, menus, commands, tooltips, empty states, and permission explanations.
+2. Add stable catalog keys and translator context if the product has adopted a String Catalog.
+3. Keep interpolation and plural variants in one localisable unit; do not concatenate translated fragments.
+4. Use `FormatStyle` for dates, numbers, currency, measurements, and person names.
+5. Test long translations, right-to-left layout, non-Latin input, locale-specific calendars/numbers, and macOS text scaling.
+6. Keep logs, identifiers, protocol payloads, file formats, and developer diagnostics separate from localised UI.
 
 ## Guardrails
 
-- No user-facing text assembled with `+`.
-- No manual plural `count == 1` branching when catalog pluralization applies.
-- No `String(format:)` for display formatting.
-- No fixed-width layout justified only by English copy.
-- User search uses `localizedStandardContains` unless domain semantics require exact matching.
-- Do not localize stable data keys, URLs, notification names, or analytics identifiers.
+- Do not assemble user-facing text with `+`.
+- Do not hand-code singular/plural branches when catalog variation applies.
+- Do not use `String(format:)` for display formatting.
+- Do not impose fixed widths because the English text fits.
+- Use `localizedStandardContains` for ordinary local user search unless domain semantics require exact matching.
+- Do not localise stable data keys, URLs, notification names, or analytics identifiers.
 
 ## Output
 
-List catalog keys/locales affected, formatting APIs, screenshots/states reviewed, and any strings deliberately not localized with reasons.
+List catalog keys and locales affected, formatting APIs, windows/states reviewed, and strings deliberately left unlocalised with reasons. State whether a catalog and generated accessors actually exist.

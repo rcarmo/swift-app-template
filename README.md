@@ -1,30 +1,21 @@
 # Swift App Template
 
-An opinionated, dependency-free, macOS-first SwiftUI starter built entirely with Swift Package Manager.
+A macOS 14 SwiftUI starter built with Swift Package Manager. The package contains a reusable `AppCore` library, a native `Starter` executable, and Swift Testing coverage.
 
-The template keeps application logic in a testable `AppCore` library and exposes the native app as a SwiftPM executable. `swift build` compiles it; a small script assembles and signs the macOS `.app`. There is no Xcode project, XcodeGen, `xcodebuild`, or Homebrew requirement.
-
-## What is included
-
-- **Feature-first SwiftUI source tree** with domain, infrastructure, application-state, design-system, and feature layers.
-- **SwiftPM library and executable products** for testable logic and the native application.
-- **Modern state flow** using Observation, `@State`, `@Environment`, and `@Bindable` under Swift 6 strict concurrency.
-- **Native macOS composition** using `NavigationSplitView`, Settings, system controls, semantic styling, keyboard/focus behavior, and accessible states.
-- **Manual `.app` assembly** with `Info.plist`, entitlements, optional icon, SwiftPM resource bundles, and bundle-level code signing.
-- **Direct Developer ID distribution** with signing, notarisation, stapling, Gatekeeper assessment, and SHA-256 checksums.
-- **SwiftFormat and SwiftLint policy**, opt-in CI, release and Actions-cleanup workflows, tests, static checks, icon and rename helpers.
-- **15 reusable local skills** under `.pi/skills/` for implementation, design, testing, tooling, privacy, and release work.
+`swift build` compiles the executable. `scripts/build-macos-app.sh` then creates `build/Starter.app`, installs bundle metadata and resources, and signs the complete application. The repository has no Xcode project or XcodeGen configuration.
 
 ## Requirements
 
-- macOS 14 or newer.
-- A Swift 6 toolchain, supplied by Xcode Command Line Tools, full Xcode, or a compatible Swift.org toolchain.
-- Apple command-line utilities for bundling and signing (`codesign`, `plutil`, and `xcrun`).
-- SwiftFormat and SwiftLint only for `make format`, `make lint`, and `make check`. Install them however you prefer; Homebrew is optional.
+- macOS 14 or newer
+- Swift 6
+- Apple command-line tools, including `codesign`, `plutil`, and `xcrun`
+- SwiftFormat and SwiftLint for the optional `format`, `lint`, and `check` targets
 
-No Xcode project or IDE is needed for normal development.
+Homebrew is not part of the build. Install the optional quality tools by any method that puts their executables on `PATH`.
 
-## Start a new app
+## Create an application
+
+Rename the placeholder before adding product code:
 
 ```sh
 make rename NAME=MyApp BUNDLE_ID=com.example.myapp
@@ -33,73 +24,57 @@ make test
 make build
 ```
 
-The signed local app is written to `build/MyApp.app`.
+`make build` creates an ad-hoc-signed local application at `build/MyApp.app`.
 
-## Common commands
+## Commands
 
-```sh
-make help                 # list supported workflows
-make                      # SwiftPM build, assemble, and ad-hoc sign the app
-make package-build        # compile only with SwiftPM
-make run                  # build and open build/Starter.app
-make install              # copy the app to /Applications
-make test                 # SwiftPM tests for AppCore
-make validate             # repository, script, resource, and skill checks
-make workflow-test        # mocked SwiftPM/Make orchestration checks
-make format               # optional SwiftFormat/SwiftLint corrections
-make lint                 # optional strict formatting/lint gate
-make icon PNG=icon.png    # create build/AppIcon.icns from a 1024-square PNG
-make clean
-```
+| Command | Result |
+|---|---|
+| `make` or `make build` | Compile, assemble, and ad-hoc sign `build/Starter.app` |
+| `make package-build` | Compile the `Starter` executable with SwiftPM |
+| `make test` | Run `AppCoreTests` with Swift Testing |
+| `make run` | Build and open the application |
+| `make install` | Replace `/Applications/Starter.app` with the local build |
+| `make uninstall` | Remove `/Applications/Starter.app` |
+| `make validate` | Check repository structure, scripts, resources, skills, and common secret patterns |
+| `make workflow-test` | Test Make target orchestration with stub commands; does not compile Swift |
+| `make format` | Apply SwiftFormat and safe SwiftLint fixes |
+| `make lint` | Run strict SwiftFormat and SwiftLint checks |
+| `make check` | Run validation, lint, tests, and SwiftPM compilation |
+| `make icon PNG=icon.png` | Create `build/AppIcon.icns` from a 1024×1024 PNG |
+| `CERT_NAME='Developer ID Application: …' NOTARY_PROFILE=starter-notary make dist VERSION=1.0.0` | Create a signed, notarised, stapled, checksummed release |
+| `make clean` | Remove `.build`, `build`, and `dist` |
 
-## Architecture
+`build`, `run`, `install`, `icon`, `notary-setup`, and `dist` require macOS. See `make help` for variables and command descriptions.
+
+## Repository layout
 
 ```text
-Package.swift
-├── AppCore library
-│   ├── Application/       observable state and root composition
-│   ├── DesignSystem/      semantic layout and visual tokens
-│   ├── Domain/            value types and pure transformations
-│   ├── Infrastructure/    dependency protocols and implementations
-│   └── Features/          feature-owned SwiftUI views
-└── Starter executable
-    └── Sources/Application/StarterApp.swift
+Package.swift                       SwiftPM products and targets
+Sources/AppCore/                    reusable domain, state, services, and views
+Sources/Application/StarterApp.swift  executable scene and dependency composition
+Tests/AppCoreTests/                 domain and model tests
+Resources/Info.plist                application metadata template
+Config/Starter.entitlements         sandbox and capabilities
+scripts/build-macos-app.sh          .app assembly and local signing
+scripts/release-macos.sh            Developer ID release and notarisation
+docs/                               architecture, design, testing, and release contracts
+.pi/skills/                         project-local implementation guidance
 ```
 
-The executable owns the model and injects it into `AppCore`. SwiftPM remains the source of truth for products, targets, dependencies, deployment version, compilation, and tests.
+`Package.swift` and `Resources/Info.plist` both declare the macOS minimum version and must stay in sync. The build script copies the plist into the application and substitutes the application name, bundle identifier, marketing version, and build number.
 
-The template is intentionally Mac-first. A future iPadOS application can consume `AppCore` as a local Swift package when that product phase begins; no iPadOS or iOS bundle scaffolding is maintained prematurely.
+The repository ships one macOS application target. A future iPadOS application may consume `AppCore` as a local package, with its bundle and platform-specific composition defined at that new application boundary.
 
-See [Architecture](docs/ARCHITECTURE.md), [Design](docs/DESIGN.md), [Testing](docs/TESTING.md), and [Release](docs/RELEASE.md).
+## Documentation
 
-## Release a macOS build
-
-1. Add a Developer ID Application certificate to the keychain.
-2. Store notarisation credentials:
-
-   ```sh
-   APPLE_ID=you@example.com TEAM_ID=XXXXXXXXXX make notary-setup
-   ```
-
-3. Build from an exact version:
-
-   ```sh
-   CERT_NAME='Developer ID Application: Your Name (XXXXXXXXXX)' \
-   make dist VERSION=0.1.0
-   ```
-
-The result is `dist/Starter-0.1.0-macos.zip` plus a SHA-256 file.
-
-## Implementation references
-
-- [rcarmo/EditorBridge](https://github.com/rcarmo/EditorBridge) — first-party MIT-licensed precedent for SwiftPM library/executable products, manual macOS `.app` assembly, and bundle-level signing.
-- [tqbf/swiftui-app](https://github.com/tqbf/swiftui-app) — earlier high-level SwiftPM-only macOS build inspiration. No source was copied because the audited repository had no explicit licence.
-- [twostraws/swiftui-agent-skill](https://github.com/twostraws/swiftui-agent-skill) — modern SwiftUI API, data-flow, accessibility, navigation, performance, and review guidance.
-- [airbnb/swift](https://github.com/airbnb/swift) — Swift style principles and formatter/linter policy.
-- [ceorkm/macos-design-skill](https://github.com/ceorkm/macos-design-skill) — macOS interaction and visual-design reference.
-
-Exact revisions, licences, and reuse boundaries are recorded in [NOTICE.md](NOTICE.md).
+- [Architecture](docs/ARCHITECTURE.md)
+- [Design and interaction](docs/DESIGN.md)
+- [Testing and validation](docs/TESTING.md)
+- [Direct release runbook](docs/RELEASE.md)
+- [Agent instructions](AGENTS.md)
+- [Provenance and licences](NOTICE.md)
 
 ## Licence
 
-This template is available under the MIT License. See [LICENSE](LICENSE). Third-party attribution and licence notices are in [NOTICE.md](NOTICE.md).
+The template is available under the [MIT licence](LICENSE). `NOTICE.md` records the audited implementation and guidance references, including the MIT-licensed SwiftPM application pattern in [rcarmo/EditorBridge](https://github.com/rcarmo/EditorBridge).

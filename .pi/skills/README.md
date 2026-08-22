@@ -1,6 +1,6 @@
-# Local Apple-development skills
+# Local macOS development skills
 
-These skills are self-contained, project-local adaptations arranged by functional domain. Agents should load the narrowest applicable skills; `swiftui-implementation` is the general orchestrator.
+These project-local skills are organised by functional domain for the SwiftPM macOS application. Load the narrowest applicable skills; `swiftui-implementation` coordinates ordinary feature work. References to another platform apply only after an explicit application target exists.
 
 ## Routing table
 
@@ -11,7 +11,7 @@ These skills are self-contained, project-local adaptations arranged by functiona
 | actors, tasks, cancellation, Sendable, races | `swift-concurrency` |
 | stacks, split views, tabs, sheets, dialogs, deep links | `swiftui-navigation` |
 | VoiceOver, Dynamic Type, motion, contrast, focus | `apple-accessibility` |
-| native layout, visual hierarchy, interaction, platform adaptation | `apple-design-review` |
+| native macOS layout, visual hierarchy, windows, keyboard and pointer interaction | `apple-design-review` |
 | rendering, scrolling, startup, memory, energy profiling | `swiftui-performance` |
 | runtime/layout/hosting/restoration hardening | `swiftui-hardening` |
 | type scale, readable measure, custom fonts | `apple-typography` |
@@ -20,7 +20,7 @@ These skills are self-contained, project-local adaptations arranged by functiona
 | Package.swift, Make, app bundling, CI, rename/icons | `apple-project-workflows` |
 | String Catalogs, formatting, plurals, RTL | `apple-localization` |
 | permissions, entitlements, privacy, keychain, sandbox | `apple-privacy-security` |
-| signing, notarisation, packaging, store/direct release | `apple-release` |
+| local signing, Developer ID release, notarisation and packaging | `apple-release` |
 
 ## Upstream-to-local mapping
 
@@ -53,16 +53,16 @@ Because the audited repository had no explicit licence, only high-level concepts
 
 ### ceorkm/macos-design-skill
 
-Its layout, interaction, visual hierarchy, keyboard, search, drag/drop, appearance, and progressive-disclosure concerns are adapted into `apple-design-review`. Web/Electron CSS and fake macOS chrome prescriptions were deliberately excluded in favor of native SwiftUI/system behavior.
+Its layout, interaction, visual hierarchy, keyboard, search, drag/drop, appearance, and progressive-disclosure concerns are adapted into `apple-design-review`. Web/Electron CSS and fake macOS chrome prescriptions were deliberately excluded in favour of native SwiftUI/system behaviour.
 
 ## Loading order for a feature
 
 1. `swiftui-implementation`
-2. architecture/concurrency/navigation skills that match behavior
+2. architecture/concurrency/navigation skills that match behaviour
 3. accessibility + design + typography for UI
 4. performance for measured responsiveness work; hardening for live runtime/layout defects
 5. testing + style/tooling
-6. localization/privacy if user text or capabilities change
+6. localisation/privacy if user text or capabilities change
 7. project/release skills only when configuration or distribution changes
 
 All source provenance and licence boundaries are in the repository root `NOTICE.md`.

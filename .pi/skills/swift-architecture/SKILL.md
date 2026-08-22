@@ -13,7 +13,7 @@ Read `docs/ARCHITECTURE.md`, then `references/state-and-dependencies.md`. Use th
 
 ## Workflow
 
-1. Write the behavior and invariants without UI terminology.
+1. Write the behaviour and invariants without UI terminology.
 2. Decide whether it is a value, pure operation, external capability, or mutable application state.
 3. Put values/pure operations in `Domain`.
 4. Define external needs as narrow `Sendable` protocols in `Infrastructure`.
@@ -30,7 +30,7 @@ Read `docs/ARCHITECTURE.md`, then `references/state-and-dependencies.md`. Use th
 - No `@AppStorage` inside an `@Observable` model and no secrets in `@AppStorage` anywhere.
 - No cached derived collection without clear invalidation.
 - No third-party architecture framework merely to avoid writing small explicit types.
-- Do not create a view model per view by reflex; add state coordination only when behavior needs an owner or test seam.
+- Do not create a view model per view by reflex; add state coordination only when behaviour needs an owner or test seam.
 
 ## Review output
 

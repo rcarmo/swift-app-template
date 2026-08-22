@@ -29,7 +29,7 @@
 - Decode/resize images near display size off the main actor using appropriate system APIs.
 - Bound caches by cost/count and respond to memory pressure.
 - Avoid repeatedly constructing large gradients, paths, attributed strings, or formatters in hot bodies.
-- Confirm resource bundles and asset variants do not inflate every target unnecessarily.
+- Confirm copied SwiftPM resource bundles and optional application resources do not inflate the final `.app` unnecessarily.
 
 ## Startup and energy
 
@@ -37,4 +37,4 @@ Keep app initializers and first scene light. Defer optional work, parallelize in
 
 ## Measurement
 
-Record device, OS, configuration, data size, scenario, tool, duration, and metric. Run multiple samples and report variance. A microbenchmark that does not represent SwiftUI invalidation/layout can mislead; pair it with a trace of the real workflow.
+Record Mac model, macOS version, window state, build configuration, data size, scenario, tool, duration, and metric. Run multiple samples and report variance. A microbenchmark that does not represent SwiftUI invalidation or layout can mislead; pair it with a trace of the real workflow.

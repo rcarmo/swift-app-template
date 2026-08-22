@@ -1,38 +1,38 @@
 ---
 name: apple-accessibility
-description: Implement or audit accessibility for SwiftUI across VoiceOver, Voice Control, Dynamic Type, contrast, Reduce Motion, Differentiate Without Color, focus, and input methods.
+description: Implement or audit macOS SwiftUI accessibility across VoiceOver, Voice Control, keyboard navigation, Full Keyboard Access, text scaling, contrast, motion, focus, and pointer input.
 license: MIT
 metadata:
-  version: "1.0"
-  provenance: Adapted from twostraws accessibility guidance and Apple-platform review practice; see NOTICE.md.
+  version: "2.0"
+  provenance: Adapted from twostraws accessibility guidance and macOS review practice; see NOTICE.md.
 ---
 
-# Apple accessibility
+# macOS accessibility
 
-Read `references/accessibility-checklist.md`. Use for every user-interface feature, custom control, image, animation, chart, drag/drop interaction, or input workflow.
+Read `references/accessibility-checklist.md` for every user-interface feature, custom control, image, animation, chart, drag-and-drop interaction, or input workflow.
 
 ## Workflow
 
-1. Identify semantics before visual styling: label, value, hint, traits, action, grouping, and heading level.
-2. Prefer native controls because they carry behavior and accessibility automatically.
-3. Verify Dynamic Type and flexible layout at accessibility sizes.
+1. Define the label, value, hint, traits, actions, grouping, and heading level before visual styling.
+2. Prefer native controls, which provide system behaviour and accessibility semantics.
+3. Test flexible layout with the largest supported macOS text and accessibility settings.
 4. Verify VoiceOver order, focus, actions, and announcements.
-5. Verify Voice Control uses visible, stable names.
-6. Check light/dark, increased contrast, and Differentiate Without Color.
-7. Check Reduce Motion and Reduce Transparency where relevant.
-8. Test keyboard/Full Keyboard Access, pointer, tvOS focus, and watchOS compact operation.
-9. Document manual checks not automatable.
+5. Verify that Voice Control uses visible, stable names.
+6. Check light and dark appearance, Increase Contrast, Reduce Transparency, and Differentiate Without Color.
+7. Check Reduce Motion for spatial or repeated animation.
+8. Test keyboard navigation, Full Keyboard Access, pointer and hover, menu and toolbar access, drag-and-drop alternatives, and focus after state changes.
+9. Record manual checks that cannot be automated.
 
 ## Guardrails
 
-- An icon-only visual button still needs a text label: use `Button("Label", systemImage:...)` and `.labelStyle(.iconOnly)` if required visually.
-- Decorative images are hidden; meaningful images have concise labels.
-- Use `Button`, not `onTapGesture`, for ordinary actions. If tap count/location is essential, add the correct accessibility traits and actions.
-- Never encode state using color alone.
-- Touch interactions need at least a 44-by-44-point target.
-- Do not force point-sized fonts without Dynamic Type scaling.
-- Large spatial motion needs a reduced-motion alternative.
+- An icon-only button still needs a text label. Use `Button("Label", systemImage: ...)` and apply `.labelStyle(.iconOnly)` only to the visual presentation.
+- Hide decorative images. Give meaningful images concise labels or descriptions.
+- Use `Button` for ordinary actions. Use gestures only when tap count, position, or movement is part of the action, and add matching accessibility actions.
+- Never communicate state through colour alone.
+- Pointer targets must be easy to acquire, and every action needs a keyboard and accessibility-focus path.
+- Use semantic text styles. Scale any necessary custom dimensions with the relevant text style.
+- Provide a reduced-motion alternative for large spatial movement.
 
 ## Output
 
-Report issues by assistive technology/setting and platform. Distinguish blockers (unreachable or unlabeled actions) from improvements. Include exact manual verification steps.
+Report the affected assistive technology or setting, macOS version, window state, consequence, correction, and exact manual verification steps. Classify unreachable or unnamed actions as blockers.

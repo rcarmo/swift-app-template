@@ -27,12 +27,14 @@ Read `Package.swift`, `Makefile`, `.github/workflows/`, scripts, and `references
 4. Update metadata, entitlements, rename/icon/static-check scripts together.
 5. Run a rename simulation in a disposable copy after template-identity changes.
 6. Update README, AGENTS, docs, skills, and workflows together.
+7. Run `make validate`, `make workflow-test`, SwiftPM tests/build, and macOS bundle assembly as the host permits; distinguish their evidence.
 
 ## Guardrails
 
-- Do not add an Xcode project or speculative iPadOS/iOS targets before those product phases exist.
+- Do not add an Xcode project or a speculative iPadOS target before that product phase exists.
 - Do not commit build output, profiles, certificates, keychains, or secrets.
 - Keep scripts compatible with macOS system Bash.
 - Sign the complete `.app`; permissions/TCC attach to bundle identity rather than the raw SwiftPM executable.
 - Entitlements are minimal by default; each capability needs product justification and a denied/restricted path.
+- Continuous integration ships as `.github/workflows/ci.yml.disabled`; activate it only by deliberately renaming it to `ci.yml` and reviewing its triggers.
 - Report SwiftPM compilation, app assembly, launch, signing, and notarisation as distinct checks.

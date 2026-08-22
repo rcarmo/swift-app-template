@@ -109,8 +109,8 @@ MIT notice for the audited source:
 
 The project-local skills are distributed under this repository's MIT licence. Their `metadata.provenance` fields identify adapted inputs, and `.pi/skills/README.md` maps source domains to local skills. The suite intentionally refactors source guidance by function rather than reproducing upstream repository names or file layouts.
 
-The local suite includes original extensions for domains that were referenced or required but not supplied as complete audited skills: concurrency, testing, typography, performance profiling, runtime hardening, localization, privacy/security, project generation, and release operations.
+The local suite includes original extensions for domains that were referenced or required but not supplied as complete audited skills: concurrency, testing, typography, performance profiling, runtime hardening, localisation, privacy/security, SwiftPM project workflows, and release operations.
 
 ## Other tools
 
-This repository names SwiftFormat, SwiftLint, GitHub Actions, SwiftPM, and Apple command-line tools as optional development or build dependencies. Their own distributions and repositories retain their respective licences; none of their source code is included here. Homebrew may install optional quality tools but is not part of the build contract.
+This repository names SwiftFormat, SwiftLint, GitHub Actions, SwiftPM, and Apple command-line tools as development or build dependencies. Their distributions retain their respective licences; none of their source code is included here. SwiftFormat and SwiftLint are optional unless their explicit Make targets are used. Homebrew is not part of the build contract.

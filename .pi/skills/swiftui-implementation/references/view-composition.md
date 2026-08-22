@@ -31,9 +31,9 @@
 ## Text entry and formatting
 
 - Prefer `TextField(axis: .vertical)` with a line range for short multi-line entry; use `TextEditor` for true document editing.
-- Bind numeric fields to numeric values with a format style, then add the platform-appropriate keyboard type.
+- Bind numeric fields to numeric values with a format style, then define macOS validation, submission, and error behaviour.
 - Use semantic `Text` format styles for dates, numbers, currency, and measurement.
 
 ## Performance investigation
 
-Do not optimize by superstition. Reproduce the issue, inspect body invalidations and Instruments, identify the expensive dependency or view boundary, make the smallest change, then measure again. A passing unit suite does not prove layout or runtime performance; run the affected UI on the lowest supported OS/device class.
+Do not optimise from code appearance alone. Reproduce the issue, inspect body invalidations and Instruments, identify the expensive dependency or view boundary, make the smallest change, and measure again. Unit tests do not verify layout or runtime performance; run the affected UI on the lowest supported macOS version and representative hardware/window sizes.

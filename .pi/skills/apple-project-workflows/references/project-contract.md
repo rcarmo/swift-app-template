@@ -5,7 +5,7 @@
 - `Package.swift`: products, targets, dependencies, deployment version, language mode, tests.
 - `Sources/AppCore`: reusable application library.
 - `Sources/Application`: executable `@main` scene.
-- `Resources/Info.plist`: bundle identity and runtime metadata.
+- `Resources/Info.plist`: bundle metadata template, including the macOS minimum version.
 - `Config/Starter.entitlements`: sandbox and capabilities.
 - `scripts/build-macos-app.sh`: deterministic `.app` assembly and local signing.
 - `Makefile`: public command interface.
@@ -14,7 +14,7 @@ There is no generated project. SwiftPM compilation must remain usable without Ho
 
 ## Adding package code
 
-Put reusable behavior in the narrowest `AppCore` feature/domain/infrastructure location. Add external packages only in `Package.swift`, pin according to project policy, and explain why Apple APIs or a small local implementation are insufficient.
+Put reusable behaviour in the narrowest `AppCore` feature/domain/infrastructure location. Add external packages only in `Package.swift`, pin according to project policy, and explain why Apple APIs or a small local implementation are insufficient.
 
 ## App bundle assembly
 
@@ -23,7 +23,7 @@ The bundler must:
 1. build the named SwiftPM executable product;
 2. create `Contents/MacOS` and `Contents/Resources`;
 3. copy the executable under the app name;
-4. substitute version/build and identity metadata into `Info.plist`;
+4. substitute the application name, bundle identifier, marketing version, and build number into `Info.plist`;
 5. copy SwiftPM resource bundles and optional `AppIcon.icns`;
 6. install `PkgInfo` and sign the complete bundle with entitlements;
 7. verify the signature and plist.
@@ -36,8 +36,12 @@ The icon helper accepts a 1024-square source and generates `build/AppIcon.icns`.
 
 ## Workflow tests
 
-`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired and failures propagate. It must also prove normal workflows do not invoke Xcode project tooling or Homebrew. This is orchestration evidence, not compilation.
+`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired and SwiftPM build failures propagate. It also proves these routes do not invoke Xcode project tooling or Homebrew. This is orchestration evidence, not compilation.
 
-## Future iPadOS/iOS work
+## Continuous integration
 
-Add a thin platform application consuming `AppCore` only when that phase starts. Keep shared architecture in SwiftPM and isolate bundle/provisioning/platform presentation at the wrapper boundary.
+The repository preserves opt-in CI as `.github/workflows/ci.yml.disabled`. Activate it only by renaming it to `ci.yml` and reviewing the branches, runner, action versions, and required permissions. Keep either the disabled template or active workflow, not both. The release and pruning workflows remain active independently.
+
+## Future iPadOS work
+
+Add a thin iPadOS application consuming `AppCore` only when that phase starts. Keep shared architecture in SwiftPM and isolate bundle, provisioning, and platform composition at the new application boundary.

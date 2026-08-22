@@ -9,7 +9,7 @@ metadata:
 
 # Swift concurrency
 
-Read `references/concurrency-checklist.md` and inspect the target's strict-concurrency settings. Use for every asynchronous service, observable model, stream, task group, actor, or sendability change.
+Read `Package.swift` and `references/concurrency-checklist.md`. The package uses Swift 6 language mode in every target. Use this skill for every asynchronous service, observable model, stream, task group, actor, or sendability change.
 
 ## Workflow
 
@@ -21,7 +21,7 @@ Read `references/concurrency-checklist.md` and inspect the target's strict-concu
 6. Propagate cancellation; do not convert it into a user-facing failure accidentally.
 7. Prevent stale responses from overwriting newer state.
 8. Inject clocks or continuations for deterministic tests instead of sleeping.
-9. Compile under Swift 6 strict concurrency and fix diagnostics at the boundary, not with broad suppressions.
+9. Run `make test` and `make package-build` under Swift 6 language mode; fix diagnostics at the boundary rather than using broad suppressions.
 
 ## Reject
 

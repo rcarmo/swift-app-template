@@ -1,37 +1,37 @@
 # Layout and composition
 
-## Content first
+## Content hierarchy
 
-An app is a container for user content and actions, not a marketing page. Establish hierarchy with system navigation and spacing, keep chrome subordinate, and allow content to use the available window.
+Use system navigation and spacing to establish hierarchy. Keep application chrome subordinate to content and let content use the available window.
 
-## Choosing structure
+## Structure
 
-- Single-purpose utility: one focused window; skip a sidebar when there are only one or two weak destinations.
-- Collection and detail: `NavigationSplitView`, selectable `List`, and a meaningful unavailable detail state.
-- Hierarchical task: `NavigationStack`.
-- Peer destinations: `TabView`, adapting tab/sidebar presentation when appropriate.
-- Data-dense macOS content: native `Table` with sorting, selection, keyboard behavior, and concise metadata.
-- Settings: `Form` in a platform Settings scene on macOS.
+- Single-purpose utility: one focused window; omit a sidebar when destinations are weak or few.
+- Collection and detail: `NavigationSplitView`, a selectable `List`, and a useful unavailable-detail state.
+- Bounded hierarchy: `NavigationStack`.
+- Peer destinations: use `TabView` only when a small stable tab set is clearer than a sidebar.
+- Dense data: native `Table` with sorting, selection, keyboard behaviour, and concise metadata.
+- Settings: `Form` in a macOS `Settings` scene.
 
-A toolbar holds frequent actions, search, view controls, and creation. Keep it sparse. Use menus for secondary actions and commands for keyboard discoverability. Do not cover or redraw native traffic lights; preserve draggable titlebar space through system composition.
+Put frequent actions, search, creation, and view controls in a sparse toolbar. Put secondary actions in menus and expose primary operations through commands. Preserve native traffic lights and draggable title-bar space.
 
 ## Sidebars and details
 
-A sidebar needs a real information hierarchy, stable labels and symbols, preserved selection, and acceptable collapse at narrow widths. Avoid loud custom selection backgrounds. Details should maintain context where useful, but a sheet/inspector/panel must match the task rather than an upstream stylistic preference.
+A sidebar needs a real hierarchy, stable labels and symbols, preserved selection, and usable narrow-window behaviour. Keep selection styling close to the system appearance. Use a detail view, sheet, inspector, or panel according to the task rather than appearance alone.
 
 ## Empty states and progressive disclosure
 
-Use `ContentUnavailableView` where appropriate. Explain why content is absent and offer one useful next action. Hide filters, bulk actions, and metadata that have no meaning without content. Search-empty differs from first-run empty; preserve the query and provide a clear reset.
+Use `ContentUnavailableView` where it fits. Explain why content is absent and offer one useful next action. Hide filters, bulk actions, and metadata that have no meaning without content. Distinguish first-run empty from search-empty; preserve the search query and provide a reset.
 
 ## Flexible layout
 
-- Use semantic spacing tokens for repeated relationships, not a rigid universal grid.
-- Avoid `UIScreen.main.bounds` and fixed window assumptions.
-- Cap readable text measure, center it in excess space, and allow text to wrap.
-- Use adaptive grids/container proposals instead of fixed column counts.
-- Test narrow and wide windows, split-screen, rotation, accessibility text, and long localization.
-- Use fixed dimensions only for truly fixed media/control requirements.
+- Use semantic spacing tokens for repeated relationships, not a fixed universal grid.
+- Avoid fixed screen or window assumptions.
+- Cap readable text measure and let text wrap.
+- Use container proposals or adaptive grids instead of fixed column counts.
+- Test narrow, standard, wide, tiled, and full-screen windows; large text; and long translations.
+- Use fixed dimensions only for media or controls whose dimensions are part of their function.
 
-## Multi-window and system integration
+## Windows and system integration
 
-Decide whether content is a document/window/scene value, how duplicates behave, and how state restores. Consider Settings, commands, import/export, share, Services, menu bar presence, inspectors, and Quick Look only when they serve the product workflow.
+Define whether content belongs to a window, document, tab, or scene value; how duplicate windows behave; and what state restores. Add Settings, commands, import/export, sharing services, Services, menu bar extras, inspectors, and Quick Look only when they support the product workflow.

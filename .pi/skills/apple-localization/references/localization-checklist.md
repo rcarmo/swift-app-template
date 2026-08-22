@@ -1,4 +1,4 @@
-# Localization checklist
+# Localisation checklist
 
 ## Strings
 
@@ -10,14 +10,14 @@
 ## Formatting
 
 - Date/time uses locale-aware format styles and a deliberate time-zone choice.
-- Currency carries the correct currency code; it is not inferred from device locale when the data has its own currency.
+- Currency carries the correct currency code; it is not inferred from the current locale when the data has its own currency.
 - Measurements use `Measurement`/format styles and appropriate unit width.
 - Person names use `PersonNameComponents` and its format style.
 - Data interchange dates/numbers remain locale-independent at the protocol boundary.
 
 ## Layout
 
-- Test pseudo-localization or representative long strings.
+- Test pseudo-localisation or representative long strings.
 - Verify right-to-left mirroring and use leading/trailing rather than left/right.
 - Do not mirror directional media/icons whose meaning is absolute.
 - Text can wrap and controls remain reachable at accessibility sizes.

@@ -4,38 +4,44 @@
 
 For each capability record:
 
-- API/data accessed;
+- API and data accessed;
 - user-visible purpose;
-- platforms;
-- usage-description key;
-- entitlement/sandbox capability;
-- privacy manifest/App Store declaration;
-- retention/sharing/deletion;
-- denied/restricted fallback;
-- test procedure.
+- plist usage-description key, if required;
+- entitlement or sandbox capability;
+- privacy-manifest reason and distribution declaration, if required;
+- retention, sharing, and deletion;
+- denied or revoked fallback;
+- verification procedure.
 
-Usage text must be specific and user-facing. Entitlements and usage descriptions solve different layers: the sandbox grants capability; the usage description explains a protected-data prompt. Some APIs require privacy-manifest reasons as well.
+Usage text must describe the concrete user benefit. Entitlements and usage descriptions cover different layers: an entitlement grants capability; a usage description explains a protected-data prompt. Required-reason APIs may also need a privacy manifest.
 
-## Permission UX
+## Permission experience
 
-Ask only at the moment the feature needs access. Avoid launch-time prompt cascades. The pre-prompt must not manipulate or imitate the system alert. After denial, keep unrelated functionality usable and offer a clear route to retry or Settings only when useful.
+Ask when the feature needs access, not in a launch-time prompt cascade. A pre-prompt must not imitate or manipulate the system alert. After denial, leave unrelated functions usable and offer retry or a route to System Settings only when useful.
 
 ## Secrets and credentials
 
-Use Keychain for tokens/passwords and keep access groups minimal. Inject a credential service so tests use a fake. Never embed service secrets in a client app; use user credentials or a backend-issued scoped token. Redact logs and error payloads.
+Store tokens and passwords in Keychain with minimal access groups. Inject a credential service so tests can use a fake. Never embed a service secret in a client application; use user credentials or a scoped backend-issued token. Redact logs and error payloads.
 
 ## Files and sandbox
 
-Use user-selected open/save panels and security-scoped bookmarks for durable access where required. Release scope promptly. Validate moved/deleted bookmarks and provide recovery. Do not assume arbitrary filesystem access on sandboxed macOS/Catalyst.
+Use `NSOpenPanel`/`NSSavePanel` directly or SwiftUI import/export APIs for user-selected files. Persist security-scoped bookmarks only when durable access is needed, balance access calls, and recover from stale or moved bookmarks. Do not assume arbitrary filesystem access in the sandbox.
 
 ## Network
 
-Prefer URLSession and ATS defaults. Set timeouts, cancellation, status validation, bounded response handling, and privacy-aware logging. Certificate pinning creates operational risk and needs a rotation/failure plan. Never accept all certificates.
+Prefer `URLSession` and ATS defaults. Set timeouts, support cancellation, validate status and content size, and keep logs privacy-aware. Certificate pinning creates operational risk and needs a rotation and failure plan. Never accept all certificates.
 
 ## Data lifecycle
 
-Define encryption-at-rest needs, migration, backup/sync inclusion, export, account deletion, local wipe, cache expiry, and crash/analytics collection. Sensitive data should not leak into widget snapshots, notifications, clipboard, Spotlight, screenshots, or state restoration.
+Define encryption-at-rest needs, migration, backup or sync inclusion, export, account deletion, local wipe, cache expiry, and crash/analytics collection. Prevent sensitive data from leaking into notifications, clipboard, Spotlight, screenshots, state restoration, or diagnostic attachments.
 
 ## Verification
 
-Inspect the built product's entitlements and Info.plist, reset simulator/device permissions, test deny/revoke/reinstall/restore, inspect logs and network traffic, and confirm release privacy answers match code and dependencies.
+Inspect the assembled product rather than only source templates:
+
+```sh
+codesign -d --entitlements :- build/Starter.app
+plutil -p build/Starter.app/Contents/Info.plist
+```
+
+Reset the relevant macOS privacy permission with `tccutil` or System Settings when safe, then test first use, denial, later grant/revocation, relaunch, and reinstall behaviour. Inspect logs and network traffic. Confirm direct-release privacy claims match the application and its dependencies; if a separate store path is introduced, audit its declarations independently.

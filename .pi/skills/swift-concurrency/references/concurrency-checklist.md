@@ -41,7 +41,7 @@ Test a slow old response arriving after a fast new one.
 
 ## Time
 
-Use `Task.sleep(for:)` only in production behavior that genuinely waits. For tests, inject a `Clock` or a controllable dependency. Never make a test rely on wall-clock timing.
+Use `Task.sleep(for:)` only in production behaviour that genuinely waits. For tests, inject a `Clock` or a controllable dependency. Never make a test rely on wall-clock timing.
 
 ## Legacy interop
 

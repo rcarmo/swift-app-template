@@ -2,7 +2,7 @@
 
 ## Goals
 
-The starter is a macOS-first SwiftPM application whose boundaries make behavior testable, dependencies replaceable, and future platform wrappers optional rather than structural.
+The starter is a macOS-first SwiftPM application whose boundaries make behaviour testable, dependencies replaceable, and a future platform wrapper optional rather than structural.
 
 ## Package products
 
@@ -10,7 +10,7 @@ The starter is a macOS-first SwiftPM application whose boundaries make behavior 
 
 - `AppCore` is the reusable library containing domain values, services, application state, and SwiftUI features.
 - `Starter` is the executable product backed by `StarterApp`; it owns the model and scene composition.
-- `AppCoreTests` verifies domain and model behavior with Swift Testing.
+- `AppCoreTests` verifies domain and model behaviour with Swift Testing.
 
 ## Layers
 
@@ -32,7 +32,7 @@ The starter is a macOS-first SwiftPM application whose boundaries make behavior 
 
 Features own their views and local presentation state. Views render state and send named intents; they do not perform persistence, network calls, or expensive transformations in `body`.
 
-`DesignSystem` contains semantic tokens and reusable primitives, not a parallel rendering framework. Prefer system fonts, materials, colors, controls, and spacing.
+`DesignSystem` contains semantic tokens and reusable primitives, not a parallel rendering framework. Prefer system fonts, materials, colours, controls, and spacing.
 
 ## Dependency direction
 
@@ -56,4 +56,4 @@ Do not introduce a global service locator. Construct dependencies at the executa
 
 SwiftPM compiles the executable. `scripts/build-macos-app.sh` creates the conventional `.app` layout, installs metadata/resources, and signs the complete bundle. This packaging layer contains no application architecture.
 
-A future iPadOS or iOS application should consume `AppCore` as a local package and add only the platform bundle, capabilities, and presentation seams required at that time. It must not displace SwiftPM as the source of truth for shared code.
+A future iPadOS application should consume `AppCore` as a local package and add only the bundle, capabilities, and presentation seams required at that time. It must not displace SwiftPM as the source of truth for shared code.

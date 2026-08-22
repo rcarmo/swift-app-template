@@ -26,8 +26,8 @@ Represent idle/loading/loaded/failed states explicitly rather than combining unr
 
 - whether existing content remains visible;
 - selection preservation rules;
-- cancellation behavior;
-- stale response behavior;
+- cancellation behaviour;
+- stale-response behaviour;
 - user-visible retry and error wording.
 
 Errors caused by user actions must not disappear into `print` or logs.
@@ -46,6 +46,6 @@ Read mutable state at the latest responsible moment. Do not capture a settings s
 
 ## Persistence decision
 
-Specify durability, model evolution, migration, offline operation, sync/conflicts, atomicity, export, backup, deletion, encryption, and test isolation first. Then choose SwiftData, files, SQLite, CloudKit, or another adapter. Keep the choice behind a protocol shaped by application behavior.
+Specify durability, model evolution, migration, offline operation, synchronisation/conflicts, atomicity, export, backup, deletion, encryption, and test isolation first. Then choose SwiftData, files, SQLite, CloudKit, or another adapter. Keep the choice behind a protocol shaped by application behaviour.
 
-For SwiftData plus CloudKit, validate CloudKit-specific restrictions before implementation; uniqueness and required relationships often need different modeling.
+For SwiftData plus CloudKit, validate CloudKit-specific restrictions before implementation; uniqueness and required relationships often need different modelling.

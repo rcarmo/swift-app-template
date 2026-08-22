@@ -1,30 +1,31 @@
-# Platform adaptation matrix
+# macOS review matrix
 
-| Platform | Review priorities |
+| Surface | Review priorities |
 |---|---|
-| iPhone | compact navigation, one-handed reach, keyboard avoidance, orientation, Dynamic Type, touch targets |
-| iPad | split views, resizing, multitasking, pointer/keyboard, drag/drop, toolbars and inspectors |
-| Mac Catalyst | Mac idiom, menus/commands, resizing, pointer/keyboard, distinct bundle/product behavior from native Mac |
-| macOS | window/scene lifecycle, titlebar/toolbar, sidebar/table, menus/commands, Settings, focus, hover, import/export, sandbox |
-| tvOS | focus engine, remote actions, readable distance, overscan-safe layout, no touch assumptions |
-| visionOS | resizable windows, comfortable depth/motion, ornaments/volumes only when useful, gaze/pinch focus |
-| watchOS | concise stack, short labels, crown/scroll, glanceable state, minimal entry and modal depth |
+| Main window | lifecycle, title bar, toolbar, resizing, full-screen, restoration, commands |
+| Split view | sidebar width, collapse, selection, empty detail, search, keyboard navigation |
+| List or table | selection, sorting, filtering, focus, context menus, deletion, large data sets |
+| Settings | standard scene, form layout, persistence, keyboard access, help text |
+| Sheet, popover, inspector | anchoring, resize behaviour, dismissal, save/cancel semantics, focus return |
+| Import/export | sandbox access, open/save panels, security-scoped bookmarks, drag alternatives |
+| Appearance | light/dark, active/inactive windows, system tint, contrast, transparency, motion |
+| Accessibility | VoiceOver, Voice Control, Full Keyboard Access, text scaling, focus order |
+| Failure states | loading, no data, no search results, offline, permission denial, retry |
 
-## Shared-code decision
+## Shared code
 
-Share domain models, services, state machines, formatting, and feature intent. Share views where their interaction and information density remain appropriate. Create a platform-specific composition when the container, input, density, or lifecycle differs. Conditional compilation belongs at these seams, not scattered through business logic.
+Default to native macOS composition. Share domain models, services, formatting, state, and views only where reuse is real. Add a platform-specific composition layer when another application target exists and its container, input, density, or lifecycle differs.
 
 ## Required state captures
 
-For a meaningful feature, review at least:
+For a meaningful feature, inspect:
 
-- initial/loading;
+- initial and loading;
 - populated with short and long content;
-- no data;
-- no search results;
+- no data and no search results;
 - recoverable and unrecoverable failure;
-- permission denied/restricted;
-- offline/stale data;
-- compact and expanded size;
-- light/dark and accessibility text;
-- active selection/focus/hover where applicable.
+- permission denied or unavailable;
+- offline or stale data;
+- narrow, standard, wide, and full-screen windows;
+- light, dark, and accessibility appearances;
+- active selection, focus, hover, and inactive-window state where applicable.

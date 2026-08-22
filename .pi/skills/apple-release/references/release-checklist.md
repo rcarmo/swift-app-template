@@ -1,49 +1,62 @@
-# Apple release checklist
+# Direct macOS release checklist
+
+## Source and version
+
+- `VERSION` starts with semantic `X.Y.Z` and contains no surrounding whitespace.
+- Release tag is `v` followed by the exact `VERSION` value.
+- The tag resolves to the intended commit.
+- `BUILD_NUMBER` policy is explicit; the bundler otherwise uses a UTC timestamp.
+- Product name, executable product, app name, bundle identifier, entitlements path, and output names agree.
+- `Package.swift` and `Resources/Info.plist` both require macOS 14.
 
 ## Product metadata
 
-- Marketing version and monotonically increasing build number.
-- Correct product name and distinct bundle identifiers.
-- Deployment target and supported architectures.
-- Complete platform-specific icon assets.
-- Usage descriptions, privacy manifests/declarations, export compliance, and store metadata.
-- Minimal entitlements matching actual features.
+- Correct category and optional icon.
+- Required usage descriptions and privacy declarations match code and dependencies.
+- Entitlements are minimal and match actual capabilities.
+- Optional update and rollback mechanisms are documented by the derived application.
 
-## Quality gate
+## Quality evidence
 
-- Clean checkout/generation.
-- Formatter and strict linter pass.
-- Unit/integration/UI tests as applicable.
-- Every affected platform compiles with release settings.
-- Accessibility and localization matrix reviewed.
-- Offline, denied permission, migration, update, and first-launch behavior checked.
+- `make validate` and `make workflow-test` pass.
+- SwiftFormat/SwiftLint pass when installed.
+- SwiftPM tests and release executable compilation pass.
+- The real `.app` assembles on macOS; plist substitution, resources, executable, entitlements, and signature are inspected.
+- Accessibility, localisation, denied-permission, offline, migration, update, and first-launch checks relevant to the product are recorded.
 
-## Signing safety
+## Credential routes
 
-Use keychain profiles/environment references; never echo secrets. Confirm identity with `security find-identity`. Inspect:
+- Local: `make notary-setup` stores an Apple ID app-specific password in a named `notarytool` Keychain profile.
+- GitHub Actions: repository secrets provide a base64 certificate and App Store Connect API key; the runner creates an ephemeral keychain and `ci-notary` profile.
+- Secrets are passed through environment or Keychain references and are never echoed, committed, or copied into release notes.
+
+## Signing inspection
+
+Confirm the identity with `security find-identity`, then inspect the assembled app:
 
 ```sh
 codesign --verify --deep --strict --verbose=2 App.app
 codesign -d --entitlements :- App.app
+plutil -p App.app/Contents/Info.plist
 ```
 
-Treat `--deep` as verification convenience, not a substitute for correctly signing nested code in dependency order.
+`--deep` is a verification convenience, not a substitute for signing nested code in dependency order when the product gains frameworks, helpers, or extensions.
 
 ## Notarisation order
 
-1. build/sign app;
-2. verify signature;
-3. create temporary notarisation archive;
-4. submit/wait and inspect failure log if rejected;
-5. staple app;
-6. validate staple and `spctl --assess`;
-7. create fresh distribution archive;
-8. checksum and test extraction/launch.
+1. build and assemble the application;
+2. sign with Developer ID, hardened runtime, and timestamp;
+3. verify the signature;
+4. create a temporary notarisation archive;
+5. submit and wait; inspect the notary log if rejected;
+6. staple and validate the application;
+7. run `spctl --assess`;
+8. create a fresh distribution archive;
+9. write and verify the checksum;
+10. extract and launch the final archive on another Mac.
 
-## App Store distinction
+## Scope and provenance
 
-Developer ID distribution is not App Store distribution. Store delivery needs distribution profiles/certificates, archive/export settings, App Store Connect records, screenshots/metadata, privacy declarations, TestFlight validation, and review. Do not reuse direct-release assumptions blindly.
+The supplied automation is for direct Developer ID distribution, not the Mac App Store or TestFlight. Store delivery needs a separate documented path.
 
-## Rollback and provenance
-
-Tag source, record Xcode/tool versions, retain checksums and notarisation metadata, and know how to withdraw or supersede a broken release. Never overwrite an existing versioned artifact silently.
+Record the source tag/commit, Swift and macOS versions, artifact checksum, notarisation submission/result, and manual acceptance host. Do not silently replace a published versioned artifact in normal operation.

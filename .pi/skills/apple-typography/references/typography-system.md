@@ -2,39 +2,37 @@
 
 ## Semantic scale
 
-Start with system styles: `.largeTitle`, `.title`, `.title2`, `.title3`, `.headline`, `.body`, `.callout`, `.subheadline`, `.footnote`, and `.caption`. Select by semantic role, not by visual trial-and-error. Store repeated roles in a design-system namespace only when that makes hierarchy more consistent.
+Start with `.largeTitle`, `.title`, `.title2`, `.title3`, `.headline`, `.body`, `.callout`, `.subheadline`, `.footnote`, and `.caption`. Select a style by semantic role. Store repeated roles in the design-system namespace only when that improves consistency.
 
-Example role mapping:
-
-| Role | Typical semantic style |
+| Role | Typical style |
 |---|---|
-| screen/page title | `.largeTitle` or platform navigation title |
-| major section | `.title2` / `.headline` depending context |
-| lead/standfirst | `.title3` or `.body` with secondary style |
+| window or page title | system navigation title or `.largeTitle` |
+| major section | `.title2` or `.headline`, according to context |
+| lead text | `.title3` or `.body` with a secondary style |
 | body | `.body` |
-| control label | system control default / `.body` |
+| control label | system control default or `.body` |
 | metadata | `.subheadline`, `.footnote`, or sparing `.caption` |
 | code | `.body.monospaced()` |
 | table number | `.body.monospacedDigit()` |
 
-This is not a fixed prescription; system containers often choose the right style automatically.
+System containers often choose the correct style without an override.
 
 ## Hierarchy
 
-Use no more levels than the content structure requires. Weight signals emphasis, while `secondary`/`tertiary` styles signal de-emphasis. Do not create hierarchy with many near-identical sizes or opacity values. Keep headings close to the content they introduce and add more space before a new section than within one.
+Use no more levels than the content structure needs. Weight signals emphasis; `secondary` and `tertiary` foreground styles signal de-emphasis. Avoid many near-identical sizes or opacity values. Keep headings with the content they introduce and put more space before a new section than within it.
 
 ## Readability
 
-Long-form body lines should remain near a comfortable reading measure (roughly 60–75 characters in many Latin scripts), but validate other scripts rather than enforcing character counts globally. Allow adequate line spacing and paragraph separation. Avoid all-caps for long labels and never assume English word lengths.
+Keep long Latin-script body lines near 60–75 characters where practical, but test each supported script instead of enforcing one character count. Use adequate line spacing and paragraph separation. Avoid all caps for long labels and do not assume English word lengths.
 
-## Dynamic Type and platform behavior
+## Text scaling and dense views
 
-Test accessibility sizes, Bold Text, and increased contrast. Use `@ScaledMetric` for custom dimensions that must follow text. tvOS text must read at distance; watchOS needs concise hierarchy; macOS can be denser but still needs legibility and accessibility scaling.
+Test the supported macOS text and accessibility settings, Bold Text where available, and Increase Contrast. Use `@ScaledMetric` for custom dimensions that must follow a text style. Check sidebars, tables, inspectors, forms, and narrow windows; density does not justify clipped or unreadable text.
 
 ## Truncation
 
-Wrap essential text. Truncate only when the full value remains available through detail, tooltip, accessibility label/value, or another discoverable route. Use tail truncation for ordinary titles. Tables need column priorities and resizing behavior, not indiscriminate one-line clipping.
+Wrap essential text. Truncate only when the full value remains available through detail, a tooltip, an accessibility value, or another discoverable route. Use tail truncation for ordinary titles. Tables need column priorities and resize behaviour, not universal one-line clipping.
 
 ## Custom fonts
 
-Confirm redistribution licence, variable/static files, supported weights, glyph/language coverage, fallback behavior, bundle inclusion, and launch/rendering cost. Register through Xcode resources and use `relativeTo:` or other Dynamic Type-aware scaling. System typography is the default.
+Confirm the redistribution licence, files and weights, glyph coverage, fallbacks, bundle inclusion, and launch/rendering cost. Include fonts through SwiftPM resources or application-bundle resources and scale them relative to semantic text styles. System typography is the default.

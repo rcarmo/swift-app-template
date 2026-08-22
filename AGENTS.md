@@ -1,72 +1,53 @@
 # Agent instructions
 
-## Mission
+## Repository contract
 
-Maintain this repository as a small, modern, macOS-first SwiftUI starter built with Swift Package Manager. Prefer clear Apple APIs and explicit boundaries over abstractions or platform scaffolding added before a product needs them.
+This repository is a macOS-first SwiftUI application built with Swift Package Manager.
 
-## Before changing code
+- `Package.swift` defines the `AppCore` library, `Starter` executable product, deployment target, and tests.
+- `Sources/Application/StarterApp.swift` owns scene and dependency composition.
+- `Resources/Info.plist` is a template. `scripts/build-macos-app.sh` substitutes the application name, bundle identifier, version, and build number when it assembles the `.app`.
+- `Config/Starter.entitlements` defines sandbox and capability settings.
+- The build has no Xcode project, XcodeGen step, `xcodebuild` call, or package-manager bootstrap.
+- Build output, certificates, provisioning profiles, keychains, and notarisation credentials stay outside Git.
 
-1. Read `README.md` and the relevant file under `docs/`.
-2. Inspect `Package.swift`, `Makefile`, and neighboring source files.
-3. Record concise refinement answers for feature or behavior changes.
-4. Read `.pi/skills/README.md` and load the narrowest matching local skills.
+Read `README.md` and the relevant file under `docs/` before editing. Use `Package.swift`, `Makefile`, and neighbouring source files as implementation evidence.
 
-## Local skill routing
+## Skill routing
 
-| Change | Required local skills |
+Read `.pi/skills/README.md`, then load only the skills required by the change. Common routes:
+
+| Change | Skills |
 |---|---|
-| SwiftUI feature | `swiftui-implementation`; then relevant domains below |
-| state/dependencies/persistence | `swift-architecture` |
-| async/tasks/actors | `swift-concurrency` |
-| navigation/presentation | `swiftui-navigation` |
-| any user interface | `apple-accessibility` and `apple-design-review` |
-| performance/profiling | `swiftui-performance` |
-| runtime/layout/restoration defects | `swiftui-hardening` |
-| typography/custom fonts | `apple-typography` |
+| SwiftUI feature | `swiftui-implementation` plus the relevant domains below |
+| state, dependencies, persistence | `swift-architecture` |
+| asynchronous work | `swift-concurrency` |
+| navigation or presentation | `swiftui-navigation` |
+| user interface | `apple-accessibility`, `apple-design-review` |
 | tests | `swift-testing` |
-| style/tool configuration | `swift-style-tooling` |
-| Package.swift/Make/bundling/CI/icons/rename | `apple-project-workflows` |
-| user-facing strings/formatting | `apple-localization` |
-| permissions/data/secrets/network/files | `apple-privacy-security` |
-| distribution | `apple-release` |
+| style configuration | `swift-style-tooling` |
+| package, Make, bundling, CI, icons, rename | `apple-project-workflows` |
+| localisation or formatting | `apple-localization` |
+| permissions, data, files, network, secrets | `apple-privacy-security` |
+| signing or distribution | `apple-release` |
 
-## Architecture rules
+## Code rules
 
 - Put value types and pure transformations in `Domain`.
-- Define narrow dependency protocols in `Infrastructure`; inject implementations at the app boundary.
-- Keep observable UI state `@MainActor` and owned with `@State`.
-- Keep views declarative and move dependency calls out of `body`.
-- Organise by feature as the app grows; keep one meaningful type per Swift file.
-- Do not add a third-party dependency without explaining why an Apple API or small local implementation is insufficient.
-- Preserve Swift 6 strict-concurrency correctness. Never silence it with broad `@unchecked Sendable` annotations.
-- Keep SwiftPM as the only build graph and dependency source of truth.
+- Define narrow dependency protocols in `Infrastructure` and inject implementations at the executable boundary.
+- Keep mutable UI state `@MainActor`; own the root observable model with `@State`.
+- Keep dependency calls and business rules out of `View.body`.
+- Organise code by feature and keep one meaningful type per Swift file.
+- Prefer SwiftUI and system controls. Isolate an AppKit bridge when SwiftUI lacks the required capability.
+- Do not add a package dependency without explaining why an Apple API or a local implementation is insufficient.
+- Preserve Swift 6 strict concurrency. Do not suppress it with broad `@unchecked Sendable` conformance.
+- Do not add speculative application targets. A second platform starts with its own explicit product requirement.
 
-## Design rules
+Follow the local SwiftFormat and SwiftLint configurations. Use British spelling in documentation. Do not use force unwraps, force tries, direct `print`, swallowed user-action errors, or committed secrets.
 
-- Start with macOS system containers, controls, fonts, colors, symbols, menus, commands, Settings, and presentation APIs.
-- Provide loading, empty, filtered-empty, failure, retry, and populated states.
-- Support VoiceOver, Voice Control, keyboard/focus, Reduce Motion, increased contrast, and Differentiate Without Color.
-- Avoid fixed window dimensions, color-only meaning, hidden labels, fake macOS chrome, and decorative animation.
-- Defer iPadOS/iOS adaptation until those product phases begin; do not maintain speculative application targets.
+## Validation
 
-## Style
-
-- Follow the Swift API Design Guidelines and local formatter/linter configurations.
-- Aim for 100-character lines; 120 is the formatter limit and 140 is a hard lint error.
-- Prefer explicit names, Swift-native APIs, `async`/`await`, actors, format styles, and modern SwiftUI modifiers.
-- No force unwraps, force tries, direct `print`, swallowed user-action errors, or secrets in source.
-
-## Build contract
-
-- `Package.swift` defines `AppCore`, the `Starter` executable product, and tests.
-- `scripts/build-macos-app.sh` independently assembles the SwiftPM executable into a macOS `.app` and signs the complete bundle.
-- `Resources/Info.plist` and `Config/Starter.entitlements` own bundle metadata and capabilities.
-- There is no Xcode project, XcodeGen, `xcodebuild`, or Homebrew build dependency.
-- Build output, certificates, profiles, keychains, and notarisation credentials must not be committed.
-
-## Required validation
-
-Run the strongest available subset and state exactly what was not run:
+Run the commands that apply and report any command not run:
 
 ```sh
 make validate
@@ -77,15 +58,16 @@ make package-build
 make build
 ```
 
-`make build` requires macOS. Mocked workflow tests prove orchestration only; never claim native compilation or launch validation without real Swift and macOS output.
+`make build` requires macOS and verifies app assembly plus code signing. `make workflow-test` uses stubs and provides no compilation evidence.
 
-## Completion checklist
+For a rename change, run the helper in a disposable copy and check for stale placeholder names. For a release change, verify tag/version handling, signing order, notarisation archive order, final checksum contents, and downloaded-asset verification.
 
-- Behavior has deterministic tests.
-- User-visible failures are presented and recoverable where possible.
-- macOS behavior, keyboard use, accessibility, and window resizing have been reviewed.
-- Documentation and `Package.swift` match implementation.
-- No generated project, secrets, or build output are committed.
-- Rename changes have been tested in a disposable copy.
-- Local skill metadata/index remain valid.
-- `NOTICE.md` is updated if new source or substantial guidance is incorporated.
+## Completion checks
+
+- Tests cover changed behaviour and failure paths.
+- The assembled application has been run for non-trivial UI changes.
+- Keyboard, focus, window resizing, and accessibility have been reviewed where affected.
+- `Package.swift`, bundle metadata, commands, and documentation agree.
+- No build output, generated project, secret, certificate, or profile is committed.
+- `./scripts/check-skills.sh` passes.
+- `NOTICE.md` records any new implementation or substantial guidance source.
