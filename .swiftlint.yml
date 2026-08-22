@@ -1,4 +1,9 @@
 strict: true
+disabled_rules:
+  # SwiftFormat owns these syntactic rules. Its policy keeps trailing commas in
+  # multi-line literals and places @testable imports after ordinary imports.
+  - sorted_imports
+  - trailing_comma
 included:
   - Sources
   - Tests
@@ -32,7 +37,6 @@ opt_in_rules:
   - modifier_order
   - overridden_super_call
   - prefer_self_in_static_references
-  - sorted_imports
   - toggle_bool
   - unneeded_parentheses_in_closure_argument
 custom_rules:
