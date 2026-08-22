@@ -10,7 +10,7 @@ NOTARY_PROFILE ?= starter-notary
 APP := build/$(APP_NAME).app
 LSREGISTER := /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister
 
-.PHONY: help doctor quality-tools check validate skills workflow-test format lint test package-build \
+.PHONY: help doctor quality-tools check release-check validate skills workflow-test format lint test package-build \
         build release run install uninstall register icon notary-setup dist clean rename
 
 help:
@@ -19,6 +19,7 @@ help:
 	@echo "  make package-build    Compile the app with SwiftPM only"
 	@echo "  make test             Run AppCore tests with SwiftPM"
 	@echo "  make check            Validate, lint, test, and compile"
+	@echo "  make release-check    Run every automated preflight for distribution"
 	@echo "  make run              Build and launch the app"
 	@echo "  make install          Install the app in /Applications"
 	@echo "  make uninstall        Remove it from /Applications"
@@ -53,6 +54,8 @@ quality-tools:
 	  echo "error: SwiftLint is required for this optional quality target"; exit 1; }
 
 check: validate lint test package-build
+
+release-check: validate workflow-test lint test package-build
 
 validate:
 	./scripts/static-checks.sh
@@ -107,7 +110,8 @@ icon: doctor
 notary-setup: doctor
 	NOTARY_PROFILE="$(NOTARY_PROFILE)" ./scripts/notary-setup.sh
 
-dist: doctor
+dist: CONFIGURATION := release
+dist: doctor release-check
 	APP_NAME="$(APP_NAME)" PRODUCT_NAME="$(PRODUCT_NAME)" BUNDLE_ID="$(BUNDLE_ID)" \
 	  VERSION="$(VERSION)" NOTARY_PROFILE="$(NOTARY_PROFILE)" ./scripts/release-macos.sh
 

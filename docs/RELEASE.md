@@ -58,6 +58,8 @@ NOTARY_PROFILE=starter-notary \
 make dist VERSION="$(cat VERSION)"
 ```
 
+`make dist` first runs `make release-check`: repository and skill validation, mocked workflow tests, strict formatting/linting, Swift Testing, and release-configuration executable compilation. Distribution therefore requires SwiftFormat and SwiftLint on `PATH` in addition to the signing and notarisation prerequisites.
+
 The release script:
 
 1. removes previous `build` and `dist` output;
@@ -66,7 +68,7 @@ The release script:
 4. re-signs the complete app with hardened runtime and a secure timestamp;
 5. verifies the signature and creates a temporary notarisation zip;
 6. submits with `notarytool --wait`, staples and validates the ticket, and runs `spctl --assess`;
-7. creates `dist/Starter-<version>-macos.zip`, writes its SHA-256 file, and removes the temporary archive.
+7. creates `dist/Starter-<version>-macos.zip`, writes and verifies its SHA-256 file, and removes the temporary archive.
 
 The final distribution archive is created only after stapling. The checksum contains the archive basename, so downloaded `.zip` and `.sha256` assets can be verified in any directory:
 

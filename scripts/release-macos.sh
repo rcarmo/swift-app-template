@@ -37,6 +37,7 @@ ditto -c -k --keepParent "$app" "$release_zip"
 (
   cd "$dist_dir"
   shasum -a 256 "$(basename "$release_zip")" > "$(basename "$release_zip").sha256"
+  shasum -a 256 -c "$(basename "$release_zip").sha256"
 )
 rm -f "$notary_zip"
 echo "Created $release_zip and $release_zip.sha256"

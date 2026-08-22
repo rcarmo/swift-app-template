@@ -6,7 +6,7 @@ struct StarterCommands: Commands {
   @FocusedValue(\.selectedItem) private var selectedItem
 
   var body: some Commands {
-    CommandGroup(after: .newItem) {
+    CommandGroup(replacing: .newItem) {
       Button("New Item", systemImage: "plus") {
         actions?.addItem()
       }

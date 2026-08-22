@@ -63,7 +63,7 @@ public struct RootContentView: View {
     .fileExporter(
       isPresented: $isExporting,
       item: selectedItem,
-      contentType: .starterItem,
+      contentTypes: [.starterItem],
       defaultFilename: selectedItem?.title,
       onCompletion: exportCompleted,
     )
@@ -71,8 +71,10 @@ public struct RootContentView: View {
       Alert(
         title: Text(error.title),
         message: Text(error.message),
-        dismissButton: .default(Text("OK")),
       )
+    }
+    .onChange(of: filteredItems.map(\.id), initial: true) {
+      model.reconcileSelection(with: filteredItems)
     }
     .task {
       await model.loadIfNeeded()
@@ -88,15 +90,27 @@ public struct RootContentView: View {
       do {
         let urls = try result.get()
         try await model.importItems(ItemFileCodec.decode(urls))
+      } catch is CancellationError {
+        return
       } catch {
-        presentedError = PresentedError(title: "Couldn’t Import Items", message: error.localizedDescription)
+        let cocoaError = error as NSError
+        guard cocoaError.domain != NSCocoaErrorDomain || cocoaError.code != NSUserCancelledError else {
+          return
+        }
+        presentedError = PresentedError(
+          title: "Couldn’t Import Items",
+          message: "Check that the selected files are valid item files and try again.",
+        )
       }
     }
   }
 
   private func exportCompleted(_ result: Result<URL, any Error>) {
-    if case let .failure(error) = result {
-      presentedError = PresentedError(title: "Couldn’t Export Item", message: error.localizedDescription)
+    if case .failure = result {
+      presentedError = PresentedError(
+        title: "Couldn’t Export Item",
+        message: "Choose another location and try again.",
+      )
     }
   }
 }

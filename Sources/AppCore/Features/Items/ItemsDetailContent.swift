@@ -34,7 +34,7 @@ struct ItemsDetailContent: View {
   }
 
   private var selectedItem: Item? {
-    filteredItems.first(where: { $0.id == model.selection }) ?? filteredItems.first
+    filteredItems.first(where: { $0.id == model.selection })
   }
 
   private func retry() {

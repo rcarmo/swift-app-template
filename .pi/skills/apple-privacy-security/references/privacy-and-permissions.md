@@ -40,7 +40,7 @@ Define encryption-at-rest needs, migration, backup or sync inclusion, export, ac
 Inspect the assembled product rather than only source templates:
 
 ```sh
-codesign -d --entitlements :- build/Starter.app
+codesign -d --entitlements - build/Starter.app
 plutil -p build/Starter.app/Contents/Info.plist
 ```
 

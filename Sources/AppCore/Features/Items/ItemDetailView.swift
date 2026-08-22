@@ -16,7 +16,7 @@ struct ItemDetailView: View {
           .foregroundStyle(.secondary)
 
         LabeledContent("Last updated") {
-          Text(item.updatedAt, format: .dateTime.day().month().year())
+          UpdatedAtText(date: item.updatedAt)
         }
 
         Button(

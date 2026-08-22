@@ -1,7 +1,7 @@
 import SwiftUI
 
 public struct SettingsView: View {
-  @AppStorage("showsRelativeDates") private var showsRelativeDates = true
+  @AppStorage(AppPreferenceKey.showsRelativeDates) private var showsRelativeDates = true
 
   public init() {}
 

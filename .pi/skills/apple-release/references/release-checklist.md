@@ -36,7 +36,7 @@ Confirm the identity with `security find-identity`, then inspect the assembled a
 
 ```sh
 codesign --verify --deep --strict --verbose=2 App.app
-codesign -d --entitlements :- App.app
+codesign -d --entitlements - App.app
 plutil -p App.app/Contents/Info.plist
 ```
 

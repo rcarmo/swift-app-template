@@ -2,14 +2,14 @@
 
 ## Automated layers
 
-1. **Swift Testing unit/model tests** cover `ItemSearch` query behaviour plus `AppModel` loading, visible failure mapping, selection, favourite mutation, import merging, and deletion.
+1. **Swift Testing unit/model tests** cover `ItemSearch` query behaviour plus `AppModel` loading, visible failure mapping, cancellation, stale-response rejection, filtered selection, favourite mutation, import merging, and deletion.
 2. **Static validation** checks the SwiftPM-only repository shape, macOS 26/Swift 6.2/concurrency settings, disabled workflow policy, required files and Make targets, shell syntax, local skills, whitespace, common committed-secret forms, and plist/JSON syntax when host tools are available.
 3. **Workflow tests** use stub executables to verify Make command wiring and failure propagation without compiling Swift.
 4. **SwiftPM compilation** builds the executable product and catches type, availability, and strict-concurrency failures for the current macOS package.
 5. **Assembled-app validation** on macOS covers bundle creation, plist substitution, resources, entitlements, and code signing.
 6. **Manual acceptance** covers runtime interaction, accessibility, window behaviour, permissions, and distribution on a real Mac.
 
-The starter does not contain UI automation, snapshot tests, persistence/network integration tests, release-credential tests, or exhaustive cancellation/stale-response coverage. Add only the coverage required by the derived application.
+The starter does not contain UI automation, snapshot tests, persistence/network integration tests, release-credential tests, or exhaustive overlapping-operation coverage. Add only the coverage required by the derived application.
 
 Tests use Swift Testing. Keep identifiers, dates, clocks, locales, and service results deterministic; do not use sleeps to synchronise asynchronous tests.
 
@@ -22,6 +22,7 @@ make lint           # optional SwiftFormat and SwiftLint gate
 make test           # AppCoreTests through SwiftPM
 make package-build  # compile the Starter product through SwiftPM
 make build          # assemble and sign a real macOS .app
+make release-check  # complete automated preflight before distribution
 ```
 
 `make build` and launch acceptance require macOS. The default local signature is ad hoc. A successful `make workflow-test` proves only that Make invokes the expected commands.

@@ -17,7 +17,7 @@ The template combines the strongest current practices from the projects in `NOTI
 - macOS 26 or newer
 - Swift 6.2 or newer, normally supplied by Xcode 26
 - Apple command-line tools, including `codesign`, `plutil`, and `xcrun`
-- SwiftFormat and SwiftLint for the optional `format`, `lint`, and `check` targets
+- SwiftFormat and SwiftLint for the `format`, `lint`, `check`, `release-check`, and `dist` targets
 
 Homebrew is not part of the build. Install optional quality tools by any method that puts their executables on `PATH`.
 
@@ -68,8 +68,9 @@ These are reference implementations, not requirements for every derived product.
 | `make format` | Apply SwiftFormat and safe SwiftLint fixes |
 | `make lint` | Run strict SwiftFormat and SwiftLint checks |
 | `make check` | Run validation, lint, tests, and SwiftPM compilation |
+| `make release-check` | Add workflow tests to the complete automated distribution preflight |
 | `make icon PNG=icon.png` | Create `build/AppIcon.icns` from a 1024×1024 PNG |
-| `CERT_NAME='Developer ID Application: …' NOTARY_PROFILE=starter-notary make dist VERSION=1.0.0` | Create a signed, notarised, stapled, checksummed release |
+| `CERT_NAME='Developer ID Application: …' NOTARY_PROFILE=starter-notary make dist VERSION=1.0.0` | Run the release preflight, then create a signed, notarised, stapled, verified-checksum release |
 | `make clean` | Remove `.build`, `build`, and `dist` |
 
 `build`, `run`, `install`, `register`, `icon`, `notary-setup`, and `dist` require macOS. See `make help` for variables and command descriptions.

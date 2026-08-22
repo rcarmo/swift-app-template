@@ -12,7 +12,7 @@ public struct ItemInspectorView: View {
         LabeledContent("Summary", value: item.summary)
         LabeledContent("Favourite", value: item.isFavorite ? "Yes" : "No")
         LabeledContent("Updated") {
-          Text(item.updatedAt, format: .dateTime)
+          UpdatedAtText(date: item.updatedAt)
         }
       }
       .formStyle(.grouped)

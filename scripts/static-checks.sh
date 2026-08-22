@@ -36,9 +36,18 @@ app_entry_count="$(find Sources/Application -type f -name '*App.swift' -print | 
 while IFS= read -r script; do bash -n "$script"; done < <(find scripts -type f -name '*.sh' -print)
 ./scripts/check-skills.sh
 
-for target in build package-build test check workflow-test run install register dist rename; do
+for target in build package-build test check release-check workflow-test run install register dist rename; do
   grep -q "^$target:" Makefile || { echo "error: missing Makefile target: $target" >&2; exit 1; }
 done
+
+grep -q '^release-check: validate workflow-test lint test package-build$' Makefile || {
+  echo "error: release-check must run the complete automated distribution preflight" >&2
+  exit 1
+}
+grep -q 'shasum -a 256 -c' scripts/release-macos.sh || {
+  echo "error: release workflow must verify the final downloaded-asset checksum format" >&2
+  exit 1
+}
 
 if grep -RInE 'xcodegen|xcodebuild|\.xcodeproj|build-(ios|catalyst|tvos|visionos|watchos)|bootstrap-all|build-all' \
   --exclude-dir=.git --exclude='*.disabled' --exclude='static-checks.sh' \

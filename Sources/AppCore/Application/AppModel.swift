@@ -8,6 +8,7 @@ public final class AppModel {
   public var selection: Item.ID?
 
   private let itemService: any ItemServing
+  private var reloadGeneration = 0
 
   public init(
     itemService: any ItemServing,
@@ -26,17 +27,32 @@ public final class AppModel {
   }
 
   public func reload() async {
+    reloadGeneration += 1
+    let generation = reloadGeneration
     phase = .loading
 
     do {
       let loadedItems = try await itemService.fetchItems()
+      guard generation == reloadGeneration else { return }
       replaceItems(with: loadedItems)
       phase = .loaded
     } catch is CancellationError {
+      guard generation == reloadGeneration else { return }
       phase = items.isEmpty ? .idle : .loaded
     } catch {
-      phase = .failed(error.localizedDescription)
+      guard generation == reloadGeneration else { return }
+      let message = (error as? any UserPresentableError)?.userMessage
+        ?? "Items couldn’t be loaded. Try again."
+      phase = .failed(message)
     }
+  }
+
+  public func reconcileSelection(with visibleItems: [Item]) {
+    guard !visibleItems.isEmpty else { return }
+    guard selection.flatMap({ selectedID in
+      visibleItems.first { $0.id == selectedID }
+    }) == nil else { return }
+    selection = visibleItems.first?.id
   }
 
   public func addItem() {

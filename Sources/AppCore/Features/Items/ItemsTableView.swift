@@ -2,13 +2,15 @@ import SwiftUI
 
 public struct ItemsTableView: View {
   @Environment(AppModel.self) private var model
+  @State private var sortOrder = [KeyPathComparator(\Item.title)]
 
   public init() {}
 
   public var body: some View {
     @Bindable var model = model
+    let sortedItems = model.items.sorted(using: sortOrder)
 
-    Table(model.items, selection: $model.selection) {
+    Table(sortedItems, selection: $model.selection, sortOrder: $sortOrder) {
       TableColumn("Title", value: \.title)
 
       TableColumn("Summary") { item in
@@ -18,7 +20,7 @@ public struct ItemsTableView: View {
       }
 
       TableColumn("Updated") { item in
-        Text(item.updatedAt, format: .dateTime)
+        UpdatedAtText(date: item.updatedAt)
           .monospacedDigit()
       }
 
