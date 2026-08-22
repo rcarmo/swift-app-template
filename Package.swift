@@ -12,14 +12,14 @@ let package = Package(
     .watchOS(.v10),
   ],
   products: [
-    .library(name: "AppCore", targets: ["AppCore"]),
+    .library(name: "AppCore", targets: ["AppCore"])
   ],
   targets: [
     .target(
       name: "AppCore",
       path: "Sources/AppCore",
       swiftSettings: [
-        .swiftLanguageMode(.v6),
+        .swiftLanguageMode(.v6)
       ]
     ),
     .testTarget(
@@ -27,7 +27,7 @@ let package = Package(
       dependencies: ["AppCore"],
       path: "Tests/AppCoreTests",
       swiftSettings: [
-        .swiftLanguageMode(.v6),
+        .swiftLanguageMode(.v6)
       ]
     ),
   ]

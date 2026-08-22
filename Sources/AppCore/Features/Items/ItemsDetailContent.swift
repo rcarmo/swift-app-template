@@ -20,7 +20,7 @@ struct ItemsDetailContent: View {
   private var loadedContent: some View {
     if filteredItems.isEmpty {
       ItemsEmptyView(isSearching: isSearching)
-    } else if let selectedItem = selectedItem {
+    } else if let selectedItem {
       ItemDetailView(item: selectedItem) {
         model.toggleFavorite(for: selectedItem.id)
       }

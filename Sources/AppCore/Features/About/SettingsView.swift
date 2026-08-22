@@ -1,17 +1,17 @@
 #if os(macOS)
-import SwiftUI
+  import SwiftUI
 
-public struct SettingsView: View {
-  @AppStorage("showsRelativeDates") private var showsRelativeDates = true
+  public struct SettingsView: View {
+    @AppStorage("showsRelativeDates") private var showsRelativeDates = true
 
-  public init() {}
+    public init() {}
 
-  public var body: some View {
-    Form {
-      Toggle("Show relative dates", isOn: $showsRelativeDates)
+    public var body: some View {
+      Form {
+        Toggle("Show relative dates", isOn: $showsRelativeDates)
+      }
+      .formStyle(.grouped)
+      .padding()
     }
-    .formStyle(.grouped)
-    .padding()
   }
-}
 #endif

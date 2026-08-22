@@ -38,7 +38,7 @@ opt_in_rules:
 custom_rules:
   no_direct_standard_out_logs:
     name: Direct standard-output logging
-    regex: '(\\bprint|\\bdebugPrint|\\bdump|_printChanges)\\s*\\('
+    regex: '(\bprint|\bdebugPrint|\bdump|_printChanges)\s*\('
     message: Use os.Logger for committed application diagnostics.
     severity: error
   no_unchecked_sendable:
@@ -48,6 +48,6 @@ custom_rules:
     severity: error
   no_file_literal:
     name: Legacy file literal
-    regex: '#file\\b'
+    regex: '#file\b'
     message: Use #fileID by default or #filePath when the full path is required.
     severity: error

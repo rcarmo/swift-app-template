@@ -12,17 +12,17 @@ public struct RootContentView: View {
 
     Group {
       #if os(watchOS)
-      WatchItemsView(items: filteredItems, searchText: $searchText)
+        WatchItemsView(items: filteredItems, searchText: $searchText)
       #else
-      NavigationSplitView {
-        ItemsSidebar(items: filteredItems, selection: $model.selection)
-          .searchable(text: $searchText, prompt: "Search items")
-      } detail: {
-        ItemsDetailContent(
-          filteredItems: filteredItems,
-          isSearching: !searchText.isEmpty
-        )
-      }
+        NavigationSplitView {
+          ItemsSidebar(items: filteredItems, selection: $model.selection)
+            .searchable(text: $searchText, prompt: "Search items")
+        } detail: {
+          ItemsDetailContent(
+            filteredItems: filteredItems,
+            isSearching: !searchText.isEmpty
+          )
+        }
       #endif
     }
     .task {

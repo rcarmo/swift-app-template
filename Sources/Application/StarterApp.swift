@@ -12,9 +12,9 @@ struct StarterApp: App {
     }
 
     #if os(macOS)
-    Settings {
-      SettingsView()
-    }
+      Settings {
+        SettingsView()
+      }
     #endif
   }
 }
