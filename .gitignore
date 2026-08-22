@@ -1,0 +1,21 @@
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+
+# SwiftPM
+.build/
+.swiftpm/
+
+# Generated project and build artifacts
+Starter.xcodeproj/
+build/
+dist/
+
+# Tool caches
+.swiftformat-cache
+.swiftlint-cache/
+
+# macOS
+.DS_Store

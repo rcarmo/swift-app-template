@@ -1,0 +1,53 @@
+strict: true
+included:
+  - Sources
+  - Tests
+excluded:
+  - .build
+  - build
+  - dist
+  - Starter.xcodeproj
+line_length:
+  warning: 120
+  error: 140
+identifier_name:
+  min_length: 2
+type_body_length:
+  warning: 300
+file_length:
+  warning: 500
+opt_in_rules:
+  - array_init
+  - closure_spacing
+  - contains_over_filter_count
+  - empty_count
+  - empty_string
+  - explicit_init
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - implicit_return
+  - last_where
+  - legacy_multiple
+  - modifier_order
+  - overridden_super_call
+  - prefer_self_in_static_references
+  - sorted_imports
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+custom_rules:
+  no_direct_standard_out_logs:
+    name: Direct standard-output logging
+    regex: '(\\bprint|\\bdebugPrint|\\bdump|_printChanges)\\s*\\('
+    message: Use os.Logger for committed application diagnostics.
+    severity: error
+  no_unchecked_sendable:
+    name: Unchecked Sendable
+    regex: '@unchecked Sendable'
+    message: Prefer safe Sendable conformance or document a narrow suppression.
+    severity: error
+  no_file_literal:
+    name: Legacy file literal
+    regex: '#file\\b'
+    message: Use #fileID by default or #filePath when the full path is required.
+    severity: error
