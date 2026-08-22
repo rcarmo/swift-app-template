@@ -15,26 +15,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Repository checks
         run: make validate
+      - name: Make workflow orchestration
+        run: make workflow-test
 
   macos:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - name: Install development tools
-        run: brew bundle
-      - name: Generate project
-        run: make generate
-      - name: Lint
-        run: make lint
-      - name: Test portable package
-        run: make test-package
-      - name: Build macOS
-        run: make build-macos
-      - name: Build iOS
-        run: make build-ios IOS_DEVICE='generic/platform=iOS Simulator'
-      - name: Build tvOS
-        run: make build-tvos
-      - name: Build visionOS
-        run: make build-visionos
-      - name: Build watchOS
-        run: make build-watchos
+      - name: Bootstrap and build every Apple target
+        run: make bootstrap-all

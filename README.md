@@ -28,13 +28,19 @@ Native app work requires macOS with current Xcode command-line tools. The suppli
 | visionOS | 1.0 |
 | watchOS | 10.0 |
 
-Development tools are installed through Homebrew:
+On a fresh macOS checkout with full Xcode and Homebrew installed, one command installs the Brewfile tools, validates the repository and local skills, lints, tests the shared package, generates and resolves the Xcode project, and builds the native macOS target:
 
 ```sh
 make bootstrap
 ```
 
-This installs XcodeGen, SwiftFormat, and SwiftLint from `Brewfile`, then generates `Starter.xcodeproj`.
+To perform the same bootstrap and compile iOS Simulator, Mac Catalyst, native macOS, tvOS Simulator, visionOS Simulator, and watchOS Simulator targets:
+
+```sh
+make bootstrap-all
+```
+
+After bootstrap, plain `make` (equivalent to `make build`) repeats the validated default macOS build without reinstalling tools. `make doctor` verifies full Xcode selection, first-launch setup, and the macOS/iOS Simulator/tvOS Simulator/watchOS Simulator/visionOS Simulator SDKs, with corrective guidance when setup is incomplete.
 
 ## Start a new app
 
@@ -58,17 +64,24 @@ The generated `.xcodeproj` is deliberately ignored. Edit `project.yml`, then run
 
 ```sh
 make help                 # list supported workflows
-make validate             # portable shell/JSON/repository checks
+make bootstrap            # install tools, validate, test, generate, build macOS
+make bootstrap-all        # bootstrap and compile every configured target
+make                      # validated default native macOS build
+make build-all            # validated build of all configured targets
+make doctor               # check full Xcode/toolchain readiness
+make validate             # portable shell/JSON/repository/skill checks
+make workflow-test        # mocked Make orchestration test; not native compilation
 make format               # apply SwiftFormat and safe SwiftLint corrections
 make lint                 # strict formatting and lint gate
 make test                 # SwiftPM tests for AppCore
-make build-ios            # simulator build
-make build-macos          # generated Xcode macOS build
-make build-tvos           # tvOS simulator build
-make build-visionos       # visionOS simulator build
-make build-watchos        # watchOS simulator build
-make app-macos            # generate and build an ad-hoc signed macOS .app
-make run-macos            # build and launch the local bundle
+make build-ios            # generic iOS Simulator build
+make build-catalyst       # Mac Catalyst build
+make build-macos          # native macOS build
+make build-tvos           # generic tvOS Simulator build
+make build-visionos       # generic visionOS Simulator build
+make build-watchos        # generic watchOS Simulator build
+make app-macos            # build an ad-hoc signed macOS .app at build/Starter.app
+make run-macos            # build and launch the local app
 ```
 
 To create iOS/macOS icon assets and an `.icns` file from a square 1024-pixel PNG (other platforms need platform-specific artwork configured in `project.yml`):

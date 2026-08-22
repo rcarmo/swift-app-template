@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-required=(Package.swift project.yml Makefile README.md NOTICE.md AGENTS.md \
+required=(Package.swift project.yml Makefile Brewfile README.md NOTICE.md AGENTS.md \
   Sources/AppCore/Application/AppModel.swift)
 for file in "${required[@]}"; do
   [[ -f "$file" ]] || { echo "error: required file missing: $file" >&2; exit 1; }
@@ -15,6 +15,11 @@ app_entry_count="$(find Sources/Application -type f -name '*App.swift' -print | 
 
 while IFS= read -r script; do bash -n "$script"; done < <(find scripts -type f -name '*.sh' -print)
 ./scripts/check-skills.sh
+
+for target in bootstrap bootstrap-all build build-all workflow-test build-ios build-catalyst build-macos \
+  build-tvos build-visionos build-watchos; do
+  grep -q "^$target:" Makefile || { echo "error: missing Makefile target: $target" >&2; exit 1; }
+done
 
 if grep -RInE '[[:blank:]]+$' --exclude-dir=.git --exclude-dir=.build --exclude='*.png' .; then
   echo "error: trailing whitespace found" >&2

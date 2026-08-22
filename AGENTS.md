@@ -72,14 +72,11 @@ Run the strongest available subset and state exactly what was not run:
 make validate
 make lint
 make test
-make build-ios
-make build-macos
-make build-tvos
-make build-visionos
-make build-watchos
+make build
+make build-all
 ```
 
-On non-macOS hosts, only `make validate` is expected to work. Never report native compilation as successful without Xcode output.
+On non-macOS hosts, only `make validate` is expected to work. On a fresh macOS checkout, `make bootstrap` must remain the one-shot default setup/build path and `make bootstrap-all` the full target matrix. Never report native compilation as successful without real Xcode output; mocked Makefile workflow tests prove orchestration only.
 
 ## Completion checklist
 
