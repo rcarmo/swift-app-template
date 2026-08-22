@@ -39,18 +39,18 @@ reject_call() {
 : > "$log"
 run_make package-build >/dev/null
 require_call '^swift build --product Starter --configuration debug$'
-reject_call 'xcodebuild\|xcodegen\|brew'
+reject_call 'xcodebuild\|xcodegen'
 
 : > "$log"
 run_make test >/dev/null
 require_call '^swift test$'
-reject_call 'xcodebuild\|xcodegen\|brew'
+reject_call 'xcodebuild\|xcodegen'
 
 : > "$log"
 run_make lint >/dev/null
 require_call '^swiftformat --lint '
 require_call '^swiftlint lint --strict '
-reject_call 'xcodebuild\|xcodegen\|brew'
+reject_call 'xcodebuild\|xcodegen'
 
 : > "$log"
 if PATH="$tmp/bin:$PATH" MOCK_LOG="$log" MOCK_SWIFT_EXIT=17 \

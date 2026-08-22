@@ -113,4 +113,4 @@ The local suite includes original extensions for domains that were referenced or
 
 ## Other tools
 
-This repository names SwiftFormat, SwiftLint, GitHub Actions, SwiftPM, and Apple command-line tools as development or build dependencies. Their distributions retain their respective licences; none of their source code is included here. SwiftFormat and SwiftLint are optional unless their explicit Make targets are used. Homebrew is not part of the build contract.
+This repository names SwiftFormat, SwiftLint, GitHub Actions, SwiftPM, and Apple command-line tools as development or build dependencies. Their distributions retain their respective licences; none of their source code is included here. SwiftFormat and SwiftLint are optional unless their explicit Make targets are used and may be installed by any method that puts them on `PATH`.

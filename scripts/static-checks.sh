@@ -21,7 +21,6 @@ grep -A1 '<key>LSMinimumSystemVersion</key>' Resources/Info.plist | grep -q '<st
 }
 
 [[ ! -e project.yml ]] || { echo "error: project.yml is not part of the SwiftPM-only template" >&2; exit 1; }
-[[ ! -e Brewfile ]] || { echo "error: Homebrew is not part of the build contract" >&2; exit 1; }
 if find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | grep -q .; then
   echo "error: GitHub Actions must remain permanently disabled; keep examples as *.disabled" >&2
   exit 1

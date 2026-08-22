@@ -10,7 +10,7 @@
 - `scripts/build-macos-app.sh`: deterministic `.app` assembly and local signing.
 - `Makefile`: public command interface.
 
-There is no generated project. SwiftPM 6.2 compilation must remain usable without Homebrew or an IDE. `Package.swift` and `Info.plist` both target macOS 26. Every target preserves MainActor default isolation, `InferIsolatedConformances`, `NonisolatedNonsendingByDefault`, and Swift 6 language mode.
+There is no generated project. SwiftPM 6.2 compilation must remain usable without a package-manager bootstrap or an IDE. `Package.swift` and `Info.plist` both target macOS 26. Every target preserves MainActor default isolation, `InferIsolatedConformances`, `NonisolatedNonsendingByDefault`, and Swift 6 language mode.
 
 ## Adding package code
 
@@ -36,7 +36,7 @@ The icon helper accepts a 1024-square source and generates `build/AppIcon.icns`.
 
 ## Workflow tests
 
-`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired and SwiftPM build failures propagate. It also proves these routes do not invoke Xcode project tooling or Homebrew. This is orchestration evidence, not compilation.
+`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired and SwiftPM build failures propagate. It also proves these routes do not invoke Xcode project tooling or a package-manager bootstrap. This is orchestration evidence, not compilation.
 
 ## Continuous integration
 

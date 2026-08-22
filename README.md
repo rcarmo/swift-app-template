@@ -19,7 +19,7 @@ The template combines the strongest current practices from the projects in `NOTI
 - Apple command-line tools, including `codesign`, `plutil`, and `xcrun`
 - SwiftFormat and SwiftLint for the `format`, `lint`, `check`, `release-check`, and `dist` targets
 
-Homebrew is not part of the build. Install optional quality tools by any method that puts their executables on `PATH`.
+Install SwiftFormat and SwiftLint by any method that puts their executables on `PATH`.
 
 ## Create an application
 
