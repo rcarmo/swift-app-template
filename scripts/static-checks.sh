@@ -2,7 +2,8 @@
 set -euo pipefail
 
 required=(Package.swift project.yml Makefile Brewfile README.md NOTICE.md AGENTS.md \
-  Sources/AppCore/Application/AppModel.swift)
+  Sources/AppCore/Application/AppModel.swift .github/workflows/ci.yml.disabled \
+  .github/workflows/release.yml .github/workflows/prune-actions-artifacts.yml)
 for file in "${required[@]}"; do
   [[ -f "$file" ]] || { echo "error: required file missing: $file" >&2; exit 1; }
 done
@@ -20,6 +21,11 @@ for target in bootstrap bootstrap-all build build-all workflow-test build-ios bu
   build-tvos build-visionos build-watchos; do
   grep -q "^$target:" Makefile || { echo "error: missing Makefile target: $target" >&2; exit 1; }
 done
+
+[[ ! -e .github/workflows/ci.yml ]] || {
+  echo "error: CI must remain opt-in; preserve it as .github/workflows/ci.yml.disabled" >&2
+  exit 1
+}
 
 if grep -RInE '[[:blank:]]+$' --exclude-dir=.git --exclude-dir=.build --exclude='*.png' .; then
   echo "error: trailing whitespace found" >&2

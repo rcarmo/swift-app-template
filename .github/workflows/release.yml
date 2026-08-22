@@ -1,23 +1,57 @@
 name: Release macOS
 
 on:
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
-      version:
-        description: Release version (X.Y.Z)
+      tag:
+        description: Release tag to build and publish
         required: true
         type: string
-  push:
-    tags: ["v*.*.*"]
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   release:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - name: Resolve and validate release tag
+        shell: bash
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            release_tag="${{ inputs.tag }}"
+          else
+            release_tag="${GITHUB_REF_NAME}"
+          fi
+
+          if [[ ! "$release_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Release tag must be semantic, such as v1.2.3 or v1.2.3-rc.1; got $release_tag" >&2
+            exit 1
+          fi
+
+          echo "RELEASE_TAG=$release_tag" >> "$GITHUB_ENV"
+          echo "RELEASE_VERSION=${release_tag#v}" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
+      - name: Match release tag to source version
+        shell: bash
+        run: |
+          source_version="$(tr -d '[:space:]' < VERSION)"
+          if [[ "$RELEASE_VERSION" != "$source_version" ]]; then
+            echo "Release tag $RELEASE_TAG does not match VERSION ($source_version)" >&2
+            exit 1
+          fi
+
       - name: Import signing certificate
         env:
           CERTIFICATE_P12_BASE64: ${{ secrets.CERTIFICATE_P12_BASE64 }}
@@ -37,34 +71,28 @@ jobs:
         run: |
           printf '%s' "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 -D > AuthKey.p8
           xcrun notarytool store-credentials ci-notary --key AuthKey.p8 --key-id "$APP_STORE_CONNECT_KEY_ID" --issuer "$APP_STORE_CONNECT_ISSUER_ID"
-      - name: Resolve release version
-        id: version
-        env:
-          DISPATCH_VERSION: ${{ inputs.version }}
-        run: |
-          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
-            echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=$DISPATCH_VERSION" >> "$GITHUB_OUTPUT"
-          fi
       - name: Build, notarize and package
         env:
           CERT_NAME: ${{ secrets.CERT_NAME }}
           TEAM_ID: ${{ secrets.TEAM_ID }}
           NOTARY_PROFILE: ci-notary
-        run: make dist VERSION="${{ steps.version.outputs.value }}"
+        run: make dist VERSION="$RELEASE_VERSION"
       - name: Publish GitHub release
-        if: github.ref_type == 'tag'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist/*.zip
-            dist/*.sha256
-      - name: Upload manual release artifact
-        if: github.ref_type != 'tag'
-        uses: actions/upload-artifact@v4
-        with:
-          name: Starter-${{ steps.version.outputs.value }}-macos
-          path: |
-            dist/*.zip
-            dist/*.sha256
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" \
+              dist/*.zip \
+              dist/*.sha256 \
+              --repo "$GITHUB_REPOSITORY" \
+              --clobber
+          else
+            gh release create "$RELEASE_TAG" \
+              dist/*.zip \
+              dist/*.sha256 \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$RELEASE_TAG" \
+              --generate-notes \
+              --verify-tag
+          fi

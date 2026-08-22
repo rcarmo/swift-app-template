@@ -44,4 +44,6 @@ Run `make workflow-test` to test Make target wiring with temporary stub executab
 
 ## CI
 
-Linux performs portable checks. macOS installs tools, generates, lints, tests the package, and builds each platform including Catalyst. Pin or review action/tool changes and update generic destinations when runner Xcode versions change.
+CI is opt-in for repositories created from this template. The preserved workflow is `.github/workflows/ci.yml.disabled`; rename it to `ci.yml` and enable it in GitHub Actions only when continuous builds are wanted.
+
+When enabled, Linux performs portable checks. macOS installs tools, generates, lints, tests the package, and builds each platform including Catalyst. Pin or review action/tool changes and update generic destinations when runner Xcode versions change.

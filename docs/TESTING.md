@@ -51,4 +51,6 @@ For each feature, cover:
 
 ## CI
 
-The Linux job runs repository checks. The macOS job installs pinned-by-Brewfile tool names, generates the Xcode project, lints, runs package tests, and compiles every app platform. Update runner and simulator destinations as Xcode images evolve.
+Continuous integration is intentionally disabled in the template until a new repository explicitly opts in. The preserved workflow is `.github/workflows/ci.yml.disabled`; rename it to `ci.yml` and enable it in GitHub Actions when ready.
+
+When enabled, the Linux job runs repository checks. The macOS job installs pinned-by-Brewfile tool names, generates the Xcode project, lints, runs package tests, and compiles every app platform. Update runner and simulator destinations as Xcode images evolve.
