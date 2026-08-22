@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Localisation"
+  short_description: "Localise macOS strings, formats, and layout"
+  default_prompt: "Use $apple-localization to review and implement localisation for this macOS feature."

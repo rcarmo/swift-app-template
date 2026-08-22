@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Architecture"
+  short_description: "Design state and dependency boundaries"
+  default_prompt: "Use $swift-architecture to design or review state ownership, dependencies, and persistence seams."

@@ -43,9 +43,9 @@ make build
 | active-window actions | `@FocusedValue`, `focusedSceneValue`, and `@Entry` |
 | navigation | `NavigationSplitView`, typed selection, search, unavailable states |
 | dense data | native sortable/resizable `Table` composition |
-| files | sandboxed `fileImporter`, `fileExporter`, and security-scoped reads |
+| files | sandboxed `fileImporter`, `fileExporter`, bounded decoding, and security-scoped reads |
 | transfer | `Transferable`, `CodableRepresentation`, drag and drop |
-| input | keyboard, focus, pointer hover/drop state, context menus |
+| input | keyboard, focus, pointer hover/drop state, context menus, deletion, and undo/redo |
 | state | `@Observable`, `@State`, `@Bindable`, typed `@Environment` |
 | concurrency | MainActor UI defaults, actors, `Sendable`, cancellation, `@concurrent` |
 | tests | Swift Testing with sentence-style test names and deterministic fakes |

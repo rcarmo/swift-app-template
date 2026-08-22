@@ -28,7 +28,7 @@ Read `Package.swift` and `references/concurrency-checklist.md`. Every target use
 - `DispatchQueue.main.async` and global queues in new Swift concurrency code.
 - `Task.sleep(nanoseconds:)`; use `Task.sleep(for:)` or an injected clock.
 - `Task.detached` without a documented isolation/priority reason.
-- mutable shared state outside an actor/global actor/explicit synchronization mechanism.
+- mutable shared state outside an actor/global actor/explicit synchronisation mechanism.
 - broad `@unchecked Sendable`; a narrow suppression requires a written thread-safety proof.
 - retaining unstructured tasks without cancellation or lifecycle ownership.
 - swallowing errors or cancellation.

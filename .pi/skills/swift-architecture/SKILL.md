@@ -18,7 +18,7 @@ Read `docs/ARCHITECTURE.md`, then `references/state-and-dependencies.md`. Use th
 3. Put values/pure operations in `Domain`.
 4. Define external needs as narrow `Sendable` protocols in `Infrastructure`.
 5. Implement dependencies separately and construct them at the app boundary.
-6. Keep view-facing shared state in an `@MainActor @Observable` type.
+6. Keep view-facing shared state in a main-actor-isolated `@Observable` type; rely on the package default rather than repeating `@MainActor`.
 7. Own that model once with `@State`; pass via `@Environment` or explicit parameters; expose editable projections through `@Bindable`/`@Binding`.
 8. Model asynchronous UI state explicitly and test each transition.
 9. Document persistence, migration, sync, conflict, deletion, privacy, and backup semantics before selecting storage.

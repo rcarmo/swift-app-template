@@ -2,7 +2,7 @@
 
 ## Automated layers
 
-1. **Swift Testing unit/model tests** cover `ItemSearch` query behaviour plus `AppModel` loading, visible failure mapping, cancellation, stale-response rejection, filtered selection, favourite mutation, import merging, and deletion.
+1. **Swift Testing unit/model tests** cover `ItemSearch` query behaviour; collection normalisation and merging; bounded file decoding; undoable deletion; and `AppModel` loading, visible failure mapping, cancellation, stale-response rejection, filtered selection, favourite mutation, import merging, and deletion.
 2. **Static validation** checks the SwiftPM-only repository shape, macOS 26/Swift 6.2/concurrency settings, disabled workflow policy, required files and Make targets, shell syntax, local skills, whitespace, common committed-secret forms, and plist/JSON syntax when host tools are available.
 3. **Workflow tests** use stub executables to verify Make command wiring and failure propagation without compiling Swift.
 4. **SwiftPM compilation** builds the executable product and catches type, availability, and strict-concurrency failures for the current macOS package.

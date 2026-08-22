@@ -1,6 +1,6 @@
 ---
 name: apple-project-workflows
-description: Maintain the Swift package, Make targets, macOS app bundle assembly, rename/icon helpers, CI, signing capabilities, and build-source contract.
+description: Maintain the Swift package, Make targets, macOS app bundle assembly, rename/icon helpers, disabled CI examples and policy, signing capabilities, and build-source contract.
 license: MIT
 metadata:
   version: "2.0"
@@ -9,7 +9,7 @@ metadata:
 
 # Apple project workflows
 
-Read `Package.swift`, `Makefile`, `.github/workflows/`, scripts, and `references/project-contract.md`. Use for targets, dependencies, deployment versions, bundle metadata, entitlements, build scripts, rename/icon changes, or CI.
+Read `Package.swift`, `Makefile`, `.github/workflows/`, scripts, and `references/project-contract.md`. Use for targets, dependencies, deployment versions, bundle metadata, entitlements, build scripts, rename/icon changes, or CI policy.
 
 ## Source-of-truth contract
 

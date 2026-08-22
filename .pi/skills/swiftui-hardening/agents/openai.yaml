@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI Hardening"
+  short_description: "Diagnose live SwiftUI runtime failures"
+  default_prompt: "Use $swiftui-hardening to reproduce and harden this live macOS SwiftUI failure."

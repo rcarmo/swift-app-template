@@ -2,6 +2,8 @@
 
 These project-local skills are organised by functional domain for the SwiftPM macOS application. Load the narrowest applicable skills; `swiftui-implementation` coordinates ordinary feature work. References to another platform apply only after an explicit application target exists.
 
+Each skill keeps concise procedural guidance in `SKILL.md`, routes detailed material through one-level `references/`, and provides `agents/openai.yaml` metadata for discovery and invocation UI.
+
 ## Routing table
 
 | Task | Skill |
@@ -59,7 +61,7 @@ Its layout, interaction, visual hierarchy, keyboard, search, drag/drop, appearan
 
 1. `swiftui-implementation`
 2. architecture/concurrency/navigation skills that match behaviour
-3. accessibility + design + typography for UI
+3. accessibility + design for UI, plus typography when text hierarchy or readability changes
 4. performance for measured responsiveness work; hardening for live runtime/layout defects
 5. testing + style/tooling
 6. localisation/privacy if user text or capabilities change

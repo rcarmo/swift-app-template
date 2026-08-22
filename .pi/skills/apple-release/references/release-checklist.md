@@ -19,7 +19,7 @@
 ## Quality evidence
 
 - `make validate` and `make workflow-test` pass.
-- SwiftFormat/SwiftLint pass when installed.
+- SwiftFormat and SwiftLint pass; both are required by `make release-check` and `make dist`.
 - SwiftPM tests and release executable compilation pass.
 - The real `.app` assembles on macOS; plist substitution, resources, executable, entitlements, and signature are inspected.
 - Accessibility, localisation, denied-permission, offline, migration, update, and first-launch checks relevant to the product are recorded.

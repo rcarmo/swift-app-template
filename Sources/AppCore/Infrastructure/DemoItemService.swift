@@ -14,7 +14,7 @@ public actor DemoItemService: ItemServing {
         id: "plan-first-feature",
         title: "Plan the first feature",
         summary: "Replace this deterministic service with a production dependency.",
-        isFavorite: true,
+        isFavourite: true,
         updatedAt: Date(timeIntervalSince1970: 1_780_000_000),
       ),
       Item(

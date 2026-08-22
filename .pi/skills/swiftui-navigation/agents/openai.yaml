@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI Navigation"
+  short_description: "Design typed macOS navigation flows"
+  default_prompt: "Use $swiftui-navigation to design or review this macOS navigation and presentation flow."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Concurrency"
+  short_description: "Audit strict Swift concurrency boundaries"
+  default_prompt: "Use $swift-concurrency to implement or audit this asynchronous Swift code for isolation and cancellation correctness."

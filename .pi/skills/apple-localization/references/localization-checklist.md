@@ -2,7 +2,7 @@
 
 ## Strings
 
-- Buttons, menus, commands, titles, labels, hints, errors, empty states, onboarding, accessibility text, notifications, and permission explanations are localizable.
+- Buttons, menus, commands, titles, labels, hints, errors, empty states, onboarding, accessibility text, notifications, and permission explanations are localisable.
 - Translator context explains ambiguous nouns/verbs and placeholders.
 - Interpolation remains one catalog entry so translators can reorder it.
 - Plurals/variants use catalog rules and automatic grammar agreement where supported.

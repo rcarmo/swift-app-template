@@ -44,6 +44,46 @@ for skill_dir in "$skills_root"/*/; do
     echo "error: missing skill provenance: $skill_file" >&2
     exit 1
   }
+
+  agent_file="${skill_dir%/}/agents/openai.yaml"
+  [[ -f "$agent_file" ]] || { echo "error: missing $agent_file" >&2; exit 1; }
+  grep -q '^interface:$' "$agent_file" || { echo "error: missing interface metadata: $agent_file" >&2; exit 1; }
+  grep -q '^  display_name: "[^"]\+"$' "$agent_file" || {
+    echo "error: missing quoted display_name: $agent_file" >&2
+    exit 1
+  }
+  short_description="$(sed -n 's/^  short_description: "\(.*\)"$/\1/p' "$agent_file")"
+  [[ "${#short_description}" -ge 25 && "${#short_description}" -le 64 ]] || {
+    echo "error: short_description must contain 25-64 characters: $agent_file" >&2
+    exit 1
+  }
+  grep -Fq "default_prompt: \"Use \$$expected_name" "$agent_file" || {
+    echo "error: default_prompt must invoke \$$expected_name: $agent_file" >&2
+    exit 1
+  }
+
+  while IFS= read -r reference; do
+    [[ -f "${skill_dir%/}/$reference" ]] || {
+      echo "error: missing referenced resource ${skill_dir%/}/$reference" >&2
+      exit 1
+    }
+  done < <(grep -oE 'references/[A-Za-z0-9._-]+\.md' "$skill_file" | sort -u)
+
+  for reference_file in "${skill_dir%/}"/references/*.md; do
+    [[ -e "$reference_file" ]] || continue
+    reference_name="$(basename "$reference_file")"
+    grep -Fq "$reference_name" "$skill_file" || {
+      echo "error: unrouted reference $reference_file" >&2
+      exit 1
+    }
+  done
+
+  while IFS= read -r related_skill; do
+    [[ -f "${skill_dir%/}/$related_skill" ]] || {
+      echo "error: missing related skill ${skill_dir%/}/$related_skill" >&2
+      exit 1
+    }
+  done < <(grep -oE '\.\./[A-Za-z0-9._-]+/SKILL\.md' "$skill_file" | sort -u)
 done
 
 [[ "$skill_count" -eq 15 ]] || {

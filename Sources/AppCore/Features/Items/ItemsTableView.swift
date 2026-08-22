@@ -25,9 +25,9 @@ public struct ItemsTableView: View {
       }
 
       TableColumn("Favourite") { item in
-        Image(systemName: item.isFavorite ? "star.fill" : "star")
-          .foregroundStyle(item.isFavorite ? .yellow : .secondary)
-          .accessibilityLabel(item.isFavorite ? "Favourite" : "Not favourite")
+        Image(systemName: item.isFavourite ? "star.fill" : "star")
+          .foregroundStyle(item.isFavourite ? .yellow : .secondary)
+          .accessibilityLabel(item.isFavourite ? "Favourite" : "Not favourite")
       }
       .width(70)
     }

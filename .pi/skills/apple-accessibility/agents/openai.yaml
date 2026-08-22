@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Accessibility"
+  short_description: "Review inclusive macOS SwiftUI interaction"
+  default_prompt: "Use $apple-accessibility to audit this macOS interface for accessibility issues and verification needs."

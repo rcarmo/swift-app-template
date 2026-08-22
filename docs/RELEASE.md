@@ -58,7 +58,7 @@ NOTARY_PROFILE=starter-notary \
 make dist VERSION="$(cat VERSION)"
 ```
 
-`make dist` first runs `make release-check`: repository and skill validation, mocked workflow tests, strict formatting/linting, Swift Testing, and release-configuration executable compilation. Distribution therefore requires SwiftFormat and SwiftLint on `PATH` in addition to the signing and notarisation prerequisites.
+`make release-check` always uses the release configuration. `make dist` runs it first: repository and skill validation, mocked workflow tests, strict formatting/linting, Swift Testing, and release-configuration executable compilation. Distribution therefore requires SwiftFormat and SwiftLint on `PATH` in addition to the signing and notarisation prerequisites.
 
 The release script:
 

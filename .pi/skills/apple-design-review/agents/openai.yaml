@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Design Review"
+  short_description: "Review native macOS layout and interaction"
+  default_prompt: "Use $apple-design-review to assess this interface against native macOS design and interaction conventions."

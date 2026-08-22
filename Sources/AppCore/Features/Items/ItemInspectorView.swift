@@ -10,7 +10,7 @@ public struct ItemInspectorView: View {
       Form {
         LabeledContent("Title", value: item.title)
         LabeledContent("Summary", value: item.summary)
-        LabeledContent("Favourite", value: item.isFavorite ? "Yes" : "No")
+        LabeledContent("Favourite", value: item.isFavourite ? "Yes" : "No")
         LabeledContent("Updated") {
           UpdatedAtText(date: item.updatedAt)
         }

@@ -52,4 +52,4 @@ Use `Task.sleep(for:)` only in production behaviour that genuinely waits. For te
 
 ## Legacy interop
 
-Wrap callback APIs with checked continuations, resume exactly once, and honor cancellation if the legacy API can cancel. Use `@preconcurrency import` only as a scoped migration aid after reviewing the underlying thread-safety contract.
+Wrap callback APIs with checked continuations, resume exactly once, and honour cancellation if the legacy API can cancel. Use `@preconcurrency import` only as a scoped migration aid after reviewing the underlying thread-safety contract.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SwiftUI Implementation"
+  short_description: "Build modern macOS SwiftUI features"
+  default_prompt: "Use $swiftui-implementation to implement this macOS SwiftUI feature with the appropriate project domains."

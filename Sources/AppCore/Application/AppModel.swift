@@ -16,9 +16,9 @@ public final class AppModel {
     phase: LoadPhase = .idle,
   ) {
     self.itemService = itemService
-    self.items = items
+    self.items = ItemCollection.normalising(items)
     self.phase = phase
-    selection = items.first?.id
+    selection = self.items.first?.id
   }
 
   public func loadIfNeeded() async {
@@ -68,30 +68,44 @@ public final class AppModel {
   public func importItems(_ importedItems: [Item]) {
     guard !importedItems.isEmpty else { return }
 
-    var itemsByID = Dictionary(uniqueKeysWithValues: items.map { ($0.id, $0) })
-    for item in importedItems {
-      itemsByID[item.id] = item
-    }
-    replaceItems(with: itemsByID.values.sorted { $0.updatedAt > $1.updatedAt })
+    replaceItems(with: ItemCollection.merging(items, with: importedItems))
     selection = importedItems.first?.id
     phase = .loaded
   }
 
-  public func deleteSelection() {
-    guard let selection else { return }
-    items.removeAll { $0.id == selection }
-    self.selection = items.first?.id
+  @discardableResult
+  public func deleteSelection() -> ItemDeletion? {
+    guard let selection, let index = items.firstIndex(where: { $0.id == selection }) else {
+      return nil
+    }
+
+    let deletion = ItemDeletion(item: items[index], index: index)
+    items.remove(at: index)
+    self.selection = items.indices.contains(index) ? items[index].id : items.last?.id
+    return deletion
   }
 
-  public func toggleFavorite(for itemID: Item.ID) {
+  public func restore(_ deletion: ItemDeletion) {
+    guard !items.contains(where: { $0.id == deletion.item.id }) else {
+      selection = deletion.item.id
+      return
+    }
+
+    items.insert(deletion.item, at: min(deletion.index, items.endIndex))
+    selection = deletion.item.id
+    phase = .loaded
+  }
+
+  public func toggleFavourite(for itemID: Item.ID) {
     guard let index = items.firstIndex(where: { $0.id == itemID }) else { return }
-    items[index].isFavorite.toggle()
+    items[index].isFavourite.toggle()
   }
 
   private func replaceItems(with loadedItems: [Item]) {
-    items = loadedItems
-    if selection.flatMap({ selectedID in loadedItems.first { $0.id == selectedID } }) == nil {
-      selection = loadedItems.first?.id
+    let normalisedItems = ItemCollection.normalising(loadedItems)
+    items = normalisedItems
+    if selection.flatMap({ selectedID in normalisedItems.first { $0.id == selectedID } }) == nil {
+      selection = normalisedItems.first?.id
     }
   }
 }

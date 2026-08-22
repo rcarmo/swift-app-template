@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Release"
+  short_description: "Prepare direct macOS distribution safely"
+  default_prompt: "Use $apple-release to prepare and verify a direct Developer ID macOS release."

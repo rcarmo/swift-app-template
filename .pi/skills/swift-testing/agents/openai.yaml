@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Testing"
+  short_description: "Design deterministic Swift behaviour tests"
+  default_prompt: "Use $swift-testing to add deterministic behavioural coverage for this Swift change."

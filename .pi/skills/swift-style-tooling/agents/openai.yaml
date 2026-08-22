@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Style and Tooling"
+  short_description: "Apply project Swift style and quality gates"
+  default_prompt: "Use $swift-style-tooling to review this Swift change against the project's style and tooling policy."

@@ -4,6 +4,8 @@ struct ItemsSidebar: View {
   let items: [Item]
   @Binding var selection: Item.ID?
   let importItems: ([Item]) -> Void
+  let deleteItem: (Item.ID) -> Void
+  let deleteSelection: () -> Void
   @State private var isDropTargeted = false
 
   var body: some View {
@@ -16,6 +18,12 @@ struct ItemsSidebar: View {
       .contextMenu {
         Button("Select", systemImage: "checkmark") {
           selection = item.id
+        }
+
+        Divider()
+
+        Button("Delete", systemImage: "trash", role: .destructive) {
+          deleteItem(item.id)
         }
       }
     }
@@ -35,6 +43,7 @@ struct ItemsSidebar: View {
       }
     }
     .navigationTitle("Items")
+    .onDeleteCommand(perform: deleteSelection)
     .navigationSplitViewColumnWidth(
       min: AppTheme.Metrics.sidebarMinimum,
       ideal: AppTheme.Metrics.sidebarIdeal,

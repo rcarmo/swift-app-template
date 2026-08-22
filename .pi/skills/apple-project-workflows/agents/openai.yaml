@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Project Workflows"
+  short_description: "Maintain SwiftPM macOS build workflows"
+  default_prompt: "Use $apple-project-workflows to update and validate this template's package, bundle, or workflow configuration."

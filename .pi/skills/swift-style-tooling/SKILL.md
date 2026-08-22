@@ -9,7 +9,7 @@ metadata:
 
 # Swift style and tooling
 
-Read `.swiftformat`, `.swiftlint.yml`, and `references/style-guide.md`. Use when writing Swift, changing formatter/linter configuration, resolving style CI, or reviewing readability.
+Read `.swiftformat`, `.swiftlint.yml`, and `references/style-guide.md`. Read `references/tooling-policy.md` when formatter/linter configuration, suppressions, tool versions, or quality-gate wiring changes. Use this skill when writing Swift, changing style configuration, resolving lint failures, or reviewing readability.
 
 ## Principles
 
@@ -21,7 +21,7 @@ Read `.swiftformat`, `.swiftlint.yml`, and `references/style-guide.md`. Use when
 
 ## Workflow
 
-1. Write clear code before optimizing line count.
+1. Write clear code before optimising line count.
 2. Run `make format` after Swift edits when SwiftFormat and SwiftLint are installed.
 3. Review formatter changes; autocorrection is not a substitute for understanding.
 4. Run `make lint`; commit with zero warnings or errors.

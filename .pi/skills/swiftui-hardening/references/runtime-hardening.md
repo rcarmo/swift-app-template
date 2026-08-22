@@ -15,7 +15,7 @@ If insertion/removal with `.transition` crashes or destabilizes a hosted SwiftUI
 
 ## Observation and stale snapshots
 
-Observation tracks property access/mutation; it does not keep independent copied structs in caches synchronized. Derive from one source or rebuild caches after every relevant mutation. Identify mutable reference types by immutable IDs rather than relying on reference equality as value equality.
+Observation tracks property access/mutation; it does not keep independent copied structs in caches synchronised. Derive from one source or rebuild caches after every relevant mutation. Identify mutable reference types by immutable IDs rather than relying on reference equality as value equality.
 
 Read settings/state at commit time to avoid overwriting newer mutations. Test overlapping async saves and reloads.
 

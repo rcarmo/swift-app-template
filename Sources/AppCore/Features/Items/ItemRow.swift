@@ -5,8 +5,8 @@ struct ItemRow: View {
 
   var body: some View {
     HStack(spacing: AppTheme.Spacing.standard) {
-      Image(systemName: item.isFavorite ? "star.fill" : "doc.text")
-        .foregroundStyle(item.isFavorite ? .yellow : .secondary)
+      Image(systemName: item.isFavourite ? "star.fill" : "doc.text")
+        .foregroundStyle(item.isFavourite ? .yellow : .secondary)
         .accessibilityHidden(true)
 
       VStack(alignment: .leading, spacing: AppTheme.Spacing.compact / 2) {
@@ -20,7 +20,7 @@ struct ItemRow: View {
     }
     .accessibilityElement(children: .combine)
     .accessibilityLabel(
-      item.isFavorite ? "Favorite, \(item.title), \(item.summary)" : "\(item.title), \(item.summary)"
+      item.isFavourite ? "Favourite, \(item.title), \(item.summary)" : "\(item.title), \(item.summary)"
     )
   }
 }

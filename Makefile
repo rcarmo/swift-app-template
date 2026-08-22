@@ -55,6 +55,7 @@ quality-tools:
 
 check: validate lint test package-build
 
+release-check: CONFIGURATION := release
 release-check: validate workflow-test lint test package-build
 
 validate:

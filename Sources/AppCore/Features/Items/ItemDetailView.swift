@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ItemDetailView: View {
   let item: Item
-  let toggleFavorite: () -> Void
+  let toggleFavourite: () -> Void
 
   var body: some View {
     ScrollView {
@@ -20,9 +20,9 @@ struct ItemDetailView: View {
         }
 
         Button(
-          item.isFavorite ? "Remove from Favorites" : "Add to Favorites",
-          systemImage: item.isFavorite ? "star.slash" : "star",
-          action: toggleFavorite,
+          item.isFavourite ? "Remove from Favourites" : "Add to Favourites",
+          systemImage: item.isFavourite ? "star.slash" : "star",
+          action: toggleFavourite,
         )
         .buttonStyle(.borderedProminent)
       }

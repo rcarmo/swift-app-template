@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Typography"
+  short_description: "Review semantic macOS typography"
+  default_prompt: "Use $apple-typography to review this interface's text hierarchy, measure, and scaling."

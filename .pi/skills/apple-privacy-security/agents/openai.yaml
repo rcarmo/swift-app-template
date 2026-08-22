@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Privacy and Security"
+  short_description: "Audit macOS privacy, data, and capabilities"
+  default_prompt: "Use $apple-privacy-security to review this feature's data handling, permissions, and security boundaries."

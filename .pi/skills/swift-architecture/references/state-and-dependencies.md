@@ -7,14 +7,14 @@
 | immutable display input | value parameter |
 | child edits parent value | `@Binding` |
 | transient state created by a view | private `@State` |
-| app/feature shared state | `@MainActor @Observable`, owned with `@State` |
+| app/feature shared state | main-actor-isolated `@Observable`, owned with `@State` |
 | editable observable projection | local `@Bindable` |
 | broadly shared model | typed `@Environment` injection |
 | durable non-secret preference | `@AppStorage` in a view or preference service |
 | credential/token | keychain-backed service |
 | external operation | injected `Sendable` protocol |
 
-`@Observable` classes are `@MainActor` unless another isolation strategy is explicit and justified. Legacy `ObservableObject`, `@Published`, `@StateObject`, `@ObservedObject`, and `@EnvironmentObject` are compatibility tools, not defaults.
+`@Observable` classes inherit MainActor isolation from the package default unless another isolation strategy is explicit and justified. Do not repeat the annotation without a reason. Legacy `ObservableObject`, `@Published`, `@StateObject`, `@ObservedObject`, and `@EnvironmentObject` are compatibility tools, not defaults.
 
 ## Bindings
 

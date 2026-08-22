@@ -88,9 +88,9 @@ struct AppModelTests {
     let model = AppModel(itemService: StubItemService(result: .success([item])))
     await model.loadIfNeeded()
 
-    model.toggleFavorite(for: item.id)
+    model.toggleFavourite(for: item.id)
 
-    #expect(model.items.first?.isFavorite == true)
+    #expect(model.items.first?.isFavourite == true)
   }
 
   @Test
@@ -124,6 +124,24 @@ struct AppModelTests {
 
     #expect(model.items == [first])
     #expect(model.selection == first.id)
+  }
+
+  @Test
+  func `deleted selection can be restored for undo`() throws {
+    let first = Item(id: "first", title: "First", summary: "Keep")
+    let second = Item(id: "second", title: "Second", summary: "Restore")
+    let model = AppModel(
+      itemService: StubItemService(items: []),
+      items: [first, second],
+      phase: .loaded,
+    )
+    model.selection = second.id
+
+    let deletion = try #require(model.deleteSelection())
+    model.restore(deletion)
+
+    #expect(model.items == [first, second])
+    #expect(model.selection == second.id)
   }
 
   @Test

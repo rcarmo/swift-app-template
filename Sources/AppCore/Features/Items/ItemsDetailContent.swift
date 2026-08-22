@@ -4,25 +4,37 @@ struct ItemsDetailContent: View {
   @Environment(AppModel.self) private var model
   let filteredItems: [Item]
   let isSearching: Bool
+  let clearSearch: () -> Void
+  @State private var retryGeneration = 0
 
   var body: some View {
-    switch model.phase {
-    case .idle, .loading:
-      ProgressView("Loading…")
-    case let .failed(message):
-      LoadFailureView(message: message, retry: retry)
-    case .loaded:
-      loadedContent
+    Group {
+      switch model.phase {
+      case .idle, .loading:
+        ProgressView("Loading…")
+      case let .failed(message):
+        LoadFailureView(message: message, retry: retry)
+      case .loaded:
+        loadedContent
+      }
+    }
+    .task(id: retryGeneration) {
+      guard retryGeneration > 0 else { return }
+      await model.reload()
     }
   }
 
   @ViewBuilder
   private var loadedContent: some View {
     if filteredItems.isEmpty {
-      ItemsEmptyView(isSearching: isSearching)
+      ItemsEmptyView(
+        isSearching: isSearching,
+        clearSearch: clearSearch,
+        addItem: model.addItem,
+      )
     } else if let selectedItem {
       ItemDetailView(item: selectedItem) {
-        model.toggleFavorite(for: selectedItem.id)
+        model.toggleFavourite(for: selectedItem.id)
       }
     } else {
       ContentUnavailableView(
@@ -38,6 +50,6 @@ struct ItemsDetailContent: View {
   }
 
   private func retry() {
-    Task { await model.reload() }
+    retryGeneration += 1
   }
 }

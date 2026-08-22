@@ -44,6 +44,10 @@ grep -q '^release-check: validate workflow-test lint test package-build$' Makefi
   echo "error: release-check must run the complete automated distribution preflight" >&2
   exit 1
 }
+grep -q '^release-check: CONFIGURATION := release$' Makefile || {
+  echo "error: release-check must compile the release configuration" >&2
+  exit 1
+}
 grep -q 'shasum -a 256 -c' scripts/release-macos.sh || {
   echo "error: release workflow must verify the final downloaded-asset checksum format" >&2
   exit 1
