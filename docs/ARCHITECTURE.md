@@ -1,59 +1,89 @@
 # Architecture
 
-## Goals
+## Package baseline
 
-The starter is a macOS-first SwiftPM application whose boundaries make behaviour testable, dependencies replaceable, and a future platform wrapper optional rather than structural.
+The starter is a macOS 26 application built with SwiftPM 6.2. `Package.swift` is the build graph and configures every target with:
 
-## Package products
+```swift
+.defaultIsolation(MainActor.self)
+.enableUpcomingFeature("InferIsolatedConformances")
+.enableUpcomingFeature("NonisolatedNonsendingByDefault")
+```
 
-`Package.swift` is the sole build graph:
+The package uses Swift 6 language mode. Main-actor default isolation makes ordinary application and UI code safe by default. Domain values, service protocols, codecs, and other deliberately reusable code opt out with `nonisolated`. Work that must execute concurrently declares `@concurrent` at the function boundary.
 
-- `AppCore` is the reusable library containing domain values, services, application state, and SwiftUI features.
-- `Starter` is the executable product backed by `StarterApp`; it owns the model and scene composition.
+## Products and targets
+
+- `AppCore` contains domain values, services, application state, design tokens, and reusable SwiftUI features.
+- `Starter` is the executable product backed by `StarterApp`.
+- `StarterApp` owns scene composition and platform process concerns.
 - `AppCoreTests` verifies domain and model behaviour with Swift Testing.
 
 ## Layers
 
 ### Domain
 
-`Sources/AppCore/Domain` contains value types and pure operations. Prefer `struct`, `enum`, `Sendable`, stable identifiers, and explicit transformations.
+`Sources/AppCore/Domain` contains immutable or value-semantic data and pure transformations. Values crossing isolation boundaries conform to `Sendable`. `Item` also demonstrates `Codable` and `Transferable` with a custom `UTType`.
 
 ### Infrastructure
 
-`Sources/AppCore/Infrastructure` defines dependency protocols and implementations. Protocols describe application needs rather than mirroring an SDK. Keep credentials outside source control and mutable shared work concurrency-safe.
+`Sources/AppCore/Infrastructure` defines narrow `Sendable` protocols. Mutable services are actors. `DemoItemService` shows an actor-backed dependency and an explicit `@concurrent` operation. `ItemFileCodec` keeps file decoding off the main actor while preserving security-scoped resource access.
+
+Use `@preconcurrency import` only for a legacy module whose concurrency annotations are unavailable. Do not add `@unchecked Sendable` without a documented synchronisation proof and a narrow lint suppression.
 
 ### Application
 
-`Sources/AppCore/Application` owns application state and root composition. `AppModel` is `@Observable` and `@MainActor`: it invokes dependencies, maps failures to visible state, and preserves selection.
+`AppModel` is `@Observable`. MainActor default isolation applies without a redundant annotation. The executable owns it with `@State` and injects it through the typed environment.
 
-`Sources/Application/StarterApp.swift` is the SwiftPM executable entry. It owns `AppModel` with `@State`, injects it through the environment, and declares macOS scenes such as Settings.
+`RootContentView` derives filtered values, renders state, and sends named intents to the model. It uses `@Bindable` for editable projection and focused scene values for active-window commands.
+
+### macOS scene boundary
+
+`StarterApp` demonstrates:
+
+- a named `WindowGroup` for main content;
+- auxiliary inspector and table windows opened by stable IDs;
+- a `Settings` scene;
+- commands and conventional keyboard shortcuts;
+- dependency and model ownership.
+
+Remove unused scenes from a derived product. Do not keep capabilities merely because the template demonstrates them.
 
 ### Features and design system
 
-Features own their views and local presentation state. Views render state and send named intents; they do not perform persistence, network calls, or expensive transformations in `body`.
+Feature folders own views and local presentation state. The item feature demonstrates split navigation, search, list selection, context menus, drag and drop, import/export, empty/error/loading states, a dense table, and auxiliary detail presentation.
 
-`DesignSystem` contains semantic tokens and reusable primitives, not a parallel rendering framework. Prefer system fonts, materials, colours, controls, and spacing.
+`DesignSystem` holds named relationships that repeat. Native control metrics, materials, typography, focus, and window chrome remain under macOS control.
 
 ## Dependency direction
 
 ```text
-Starter executable → AppCore root/features → application/domain protocols
-                                            infrastructure implements protocols
+Starter executable → AppCore views/model → domain protocols
+                                      ↘ actor-backed infrastructure
 ```
 
-Do not introduce a global service locator. Construct dependencies at the executable boundary and inject them explicitly.
+Construct dependencies at the executable boundary. Do not use a service locator or mutable singleton.
 
 ## State and concurrency
 
-- App-wide mutable state: `@State` owning an `@Observable @MainActor` model.
-- View-local transient state: private `@State`.
-- Editable observable projection: `@Bindable`.
-- Durable non-sensitive preferences: `@AppStorage`.
-- Secrets: Keychain-backed services, never preferences.
-- Service protocols are `Sendable`; prefer structured concurrency and propagate cancellation.
+- application and UI state: MainActor by default;
+- root observable ownership: `@State`;
+- child observable projection: `@Bindable`;
+- view-local state: private `@State`;
+- focus: `@FocusState` and `@FocusedValue`;
+- non-sensitive preferences: `@AppStorage` in views or a preference service;
+- credentials: injected Keychain service;
+- mutable shared services: actors;
+- cross-isolation values and protocols: `Sendable`;
+- view-lifetime tasks: `.task` or `.task(id:)`;
+- concurrent CPU or blocking work: a narrow `@concurrent` function with Sendable inputs and outputs.
 
-## macOS application boundary
+Cancellation is not a user-visible failure. `AppModel.reload()` restores an idle or loaded state when cancellation occurs.
 
-SwiftPM compiles the executable. `scripts/build-macos-app.sh` creates the conventional `.app` layout, installs metadata/resources, and signs the complete bundle. This packaging layer contains no application architecture.
+## Application bundle
 
-A future iPadOS application should consume `AppCore` as a local package and add only the bundle, capabilities, and presentation seams required at that time. It must not displace SwiftPM as the source of truth for shared code.
+SwiftPM compiles the executable. `scripts/build-macos-app.sh` creates the `.app`, substitutes name, bundle identifier, version and build metadata, copies resource bundles and the optional icon, then signs the complete bundle.
+
+The current bundler handles one executable plus SwiftPM resource bundles. Add explicit inside-out signing and embedding rules before introducing frameworks, helpers, extensions, XPC services, or plug-ins.
+
+A future iPadOS application should consume `AppCore` only when that product phase starts. It must supply its own bundle, capabilities, scenes, and platform-specific composition.

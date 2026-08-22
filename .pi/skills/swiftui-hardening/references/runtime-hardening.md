@@ -33,4 +33,4 @@ Read settings/state at commit time to avoid overwriting newer mutations. Test ov
 
 ## Live-run matrix
 
-Repeat rapid toggles, navigation changes, modal open/close, window resize/tile/full-screen, search/filter, delete/undo, app activation changes, appearance changes, text scaling, Reduce Motion, and restoration. Include macOS 14 and a lower-spec supported Mac when practical.
+Repeat rapid toggles, navigation changes, modal open/close, window resize/tile/full-screen, search/filter, delete/undo, app activation changes, appearance changes, text scaling, Reduce Motion, and restoration. Include macOS 26 and a lower-spec supported Mac when practical.

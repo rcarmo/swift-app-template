@@ -11,7 +11,7 @@ make format   # mutate source with SwiftFormat, then safe SwiftLint fixes
 make lint     # read-only SwiftFormat lint and strict SwiftLint
 ```
 
-Review auto-fixes before commit. The opt-in CI template does not currently install or run SwiftFormat/SwiftLint; `make lint` remains a local/explicit gate until the derived repository adds a pinned CI installation step.
+Review auto-fixes before commit. GitHub Actions are disabled, so `make lint` is a local/explicit gate.
 
 ## Adding a rule
 

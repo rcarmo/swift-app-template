@@ -1,59 +1,69 @@
-# Design and interaction
+# macOS 26 design and interaction
 
-## Start with system behaviour
+## Native composition
 
-Use standard SwiftUI containers and controls before drawing custom chrome. Native controls inherit accessibility, focus, platform appearance, input behaviour, and future OS improvements.
+Use SwiftUI and macOS system containers before custom drawing. Do not imitate browser, Electron, or iOS chrome. macOS owns traffic lights, title bars, toolbars, sheets, menus, focus rings, materials, window activation, and control metrics.
 
-- Use `NavigationStack` or `NavigationSplitView`, never `NavigationView`.
-- Use `Label` for an icon with text.
-- Use `ContentUnavailableView` for empty, search-empty, and unavailable states.
-- Use semantic fonts and hierarchical foreground styles.
-- Prefer SF Symbols and centralised typed asset references; use generated asset accessors only if a target explicitly enables them.
-- Use `Form` and `LabeledContent` for settings and labelled values.
+The template demonstrates the desktop surfaces missing from the general source skills:
 
-## Information architecture
+- `WindowGroup`, auxiliary `Window`, and `openWindow`;
+- `Settings`;
+- `Commands`, `CommandGroup`, and `CommandMenu`;
+- `@FocusedValue` and `focusedSceneValue` for active-window actions;
+- `NavigationSplitView`, `Table`, `.searchable`, and context menus;
+- `fileImporter`, `fileExporter`, `Transferable`, `.draggable`, and `.dropDestination`.
 
-A sidebar represents stable destinations or a selectable collection; it is not decoration. Keep the primary action discoverable, preserve selection, and never leave a blank detail pane.
+Use only the surfaces required by the derived product.
 
-Respect the title bar and toolbar rather than imitating web or iOS chrome. Add menu commands and conventional shortcuts for primary actions. Settings belong in a `Settings` scene. Avoid replacing native window controls.
+## Windows and scenes
 
-## Accessibility acceptance checks
+Name windows by user task. Define close/reopen, duplicate-window, restoration, and selection behaviour. Keep the main window useful at narrow, standard, wide, tiled, and full-screen sizes. Auxiliary inspectors must update from shared state and show an explicit unavailable state when selection disappears.
 
-Every screen must be reviewed with:
+## Commands, focus, keyboard, and pointer
 
-- the largest supported macOS text and accessibility settings without clipped actions or lost content;
-- VoiceOver labels, order, traits, values, headings, and actionable controls;
-- Voice Control names that match visible labels;
-- keyboard navigation and Full Keyboard Access;
-- sufficient contrast in light, dark, increased-contrast, and tinted appearances;
-- Differentiate Without Color enabled;
-- Reduce Motion enabled, replacing spatial movement with restrained opacity where needed;
-- keyboard navigation, focus visibility, and sensible pointer targets.
+Primary actions belong in menus and use conventional shortcuts when their standard meaning fits. Commands act on the active window through focused values; do not broadcast actions through a global notification bus.
 
-Icon-only visual presentation is acceptable only when the underlying `Button` or `Menu` has a meaningful text label. Decorative images must be hidden from accessibility.
+Verify:
 
-## Layout
+- Command-N creation;
+- Command-F search focus;
+- Escape and Return behaviour where relevant;
+- Delete only when focus and selection make the consequence unambiguous;
+- focus return after sheets, file panels, and auxiliary windows;
+- context-menu parity for pointer workflows;
+- no hover-only action;
+- no layout jump when hover or drop-target state changes.
 
-Use semantic spacing tokens sparingly. Avoid fixed screen or window dimensions. Allow text to wrap, use readable line lengths, and give controls flexible frames. `GeometryReader` is a last resort after container-relative frames, layout protocols, and visual effects.
+## Navigation and dense data
 
-Design empty, loading, failure, permission-denied, offline, and populated states before polishing the happy path. Progressive disclosure is preferable to permanently visible controls with no current purpose.
+Use `NavigationSplitView` for persistent collection/detail relationships and `NavigationStack` for bounded hierarchy. Keep selection stable through refresh and filtering. Show `ContentUnavailableView` when no detail is selected.
 
-## Colour and typography
+Use `Table` when sorting, columns, alignment, and dense scanning matter. Give columns concise labels, useful minimum widths, monospaced digits for changing numbers, and a discoverable full value when text truncates.
 
-Use system semantic colours and materials so contrast and vibrancy adapt. Light and dark appearances are separate design contexts, not simple inversions. Do not encode meaning by colour alone. Prefer text styles such as `.body`, `.headline`, and `.largeTitle`; scale any necessary custom size relative to a semantic text style.
+## Files, transfer, and sandbox access
 
-## Motion and feedback
+Provide buttons or menu commands for every drag-and-drop operation. `Transferable` defines the data contract; custom previews and drop effects are secondary.
 
-Animate a state change only when motion clarifies cause, continuity, or hierarchy. Always bind animation to a value. Respect Reduce Motion, avoid gratuitous looping effects, and provide immediate feedback for commands. Use `sensoryFeedback` where haptics are genuinely useful and supported.
+Use SwiftUI file import/export panels for user-selected files. Read imported URLs while security-scoped access is active. Persist a security-scoped bookmark only when the product needs access after the immediate operation. Keep the `com.apple.security.files.user-selected.read-write` entitlement only while file workflows exist.
 
-## Search, keyboard, and drag-and-drop
+## States and feedback
 
-- Filtering user text uses `localizedStandardContains`.
-- Search should be reachable through the native search field and conventional Find command where applicable.
-- Primary macOS actions should have standard menu commands and keyboard shortcuts.
-- Content-oriented Mac apps should consider import/export and drag in/out as first-class workflows.
-- Destructive actions require a clear label, appropriate confirmation, and reversible behaviour where feasible.
+Design initial, loading, populated, empty, search-empty, failure, denied, offline, and no-selection states before visual polish. Hide actions that have no meaning in the current state. Show progress for work that is not immediate and surface errors caused by user actions.
 
-## macOS review
+Optimistic mutation needs deterministic rollback or undo. Destructive changes need a clear verb and, where feasible, undo rather than repeated confirmation.
 
-Use previews to inspect states, but validate focus, pointer, keyboard commands, window resizing, restoration, localisation, permissions, and accessibility in a real assembled application.
+## Visual system
+
+Use semantic foreground styles, native materials, SF Symbols, and system text styles. Establish hierarchy through spacing, typography, grouping, and container choice. Avoid fixed pixel recipes copied from web implementations.
+
+Check light and dark appearance, active and inactive windows, system accent changes, Increase Contrast, Reduce Transparency, keyboard focus, hover, selection, disabled state, and drag destination state.
+
+## Accessibility
+
+Every action needs a meaningful text label even when only a symbol is visible. Prefer `Button`, `Menu`, `Toggle`, `Table`, `List`, and other native controls over gesture-only composition.
+
+Test the assembled app with VoiceOver, Voice Control, Full Keyboard Access, the largest supported text settings, Reduce Motion, Reduce Transparency, Differentiate Without Color, and Increase Contrast. Pointer targets must be easy to acquire; macOS does not require an iOS-style universal 44-point control height.
+
+## Performance
+
+Keep `body` pure and cheap. Avoid `AnyView`, unstable identity, repeated sorting/filtering in collection builders, eager large stacks, and broad invalidation. Use `.task` for view-lifetime work. Profile release builds with SwiftUI Instruments, Time Profiler, Allocations, Core Animation, and Energy before adding caches or custom equality.

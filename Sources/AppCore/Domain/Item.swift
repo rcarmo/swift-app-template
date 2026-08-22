@@ -1,18 +1,23 @@
+import CoreTransferable
 import Foundation
 
-public struct Item: Identifiable, Hashable, Sendable {
+public nonisolated struct Item: Identifiable, Hashable, Sendable, Codable, Transferable {
   public let id: String
   public var title: String
   public var summary: String
   public var isFavorite: Bool
   public var updatedAt: Date
 
+  public static var transferRepresentation: some TransferRepresentation {
+    CodableRepresentation(contentType: .starterItem)
+  }
+
   public init(
     id: String = UUID().uuidString,
     title: String,
     summary: String,
     isFavorite: Bool = false,
-    updatedAt: Date = .now
+    updatedAt: Date = .now,
   ) {
     self.id = id
     self.title = title

@@ -1,11 +1,17 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 
 import PackageDescription
+
+let modernSwiftSettings: [SwiftSetting] = [
+  .defaultIsolation(MainActor.self),
+  .enableUpcomingFeature("InferIsolatedConformances"),
+  .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+]
 
 let package = Package(
   name: "Starter",
   platforms: [
-    .macOS(.v14),
+    .macOS(.v26)
   ],
   products: [
     .library(name: "AppCore", targets: ["AppCore"]),
@@ -15,25 +21,20 @@ let package = Package(
     .target(
       name: "AppCore",
       path: "Sources/AppCore",
-      swiftSettings: [
-        .swiftLanguageMode(.v6)
-      ]
+      swiftSettings: modernSwiftSettings,
     ),
     .executableTarget(
       name: "StarterApp",
       dependencies: ["AppCore"],
       path: "Sources/Application",
-      swiftSettings: [
-        .swiftLanguageMode(.v6)
-      ]
+      swiftSettings: modernSwiftSettings,
     ),
     .testTarget(
       name: "AppCoreTests",
       dependencies: ["AppCore"],
       path: "Tests/AppCoreTests",
-      swiftSettings: [
-        .swiftLanguageMode(.v6)
-      ]
+      swiftSettings: modernSwiftSettings,
     ),
-  ]
+  ],
+  swiftLanguageModes: [.v6],
 )

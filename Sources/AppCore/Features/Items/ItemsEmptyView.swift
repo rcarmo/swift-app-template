@@ -10,7 +10,7 @@ struct ItemsEmptyView: View {
       ContentUnavailableView(
         "No Items",
         systemImage: "tray",
-        description: Text("Connect a service or add your first item to get started.")
+        description: Text("Connect a service or add your first item to get started."),
       )
     }
   }

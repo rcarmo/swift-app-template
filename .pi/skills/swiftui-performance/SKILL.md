@@ -19,7 +19,7 @@ Read `references/performance-playbook.md`. Use for slow rendering, scrolling hit
 4. Identify the invalidation source, expensive transform, I/O boundary, allocation, layout cycle, image cost, or task storm.
 5. Apply the smallest correction while preserving behaviour and accessibility.
 6. Re-measure under the same conditions and add a regression benchmark/test where stable.
-7. Build and run on macOS 14 and the lowest-spec supported Mac practical for the product.
+7. Build and run on macOS 26 and the lowest-spec supported Mac practical for the product.
 
 ## Guardrails
 

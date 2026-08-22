@@ -6,13 +6,13 @@ The supplied direct-distribution path builds the SwiftPM executable, assembles a
 
 `VERSION` is the source marketing version. It must start with semantic `X.Y.Z`; prerelease suffixes such as `-rc.1` are accepted.
 
-The release workflow accepts a pushed tag or a manually supplied existing tag. The tag must start with `v`, match the semantic-version pattern, and equal `v` followed by the exact contents of `VERSION`. For example, `VERSION` `1.2.3` requires tag `v1.2.3`. Update and commit `VERSION` before creating the tag.
+The disabled release-workflow example accepts a pushed tag or a manually supplied existing tag. The tag must start with `v`, match the semantic-version pattern, and equal `v` followed by the exact contents of `VERSION`. For example, `VERSION` `1.2.3` requires tag `v1.2.3`. Update and commit `VERSION` before creating the tag.
 
 `BUILD_NUMBER` supplies `CFBundleVersion` for local or scripted bundle assembly. When omitted, the bundler uses a UTC timestamp. A derived application may impose a stricter monotonically increasing build-number policy.
 
 ## Prerequisites
 
-- macOS with Swift 6 and Apple command-line utilities.
+- macOS 26 with Swift 6.2, normally from Xcode 26, and Apple command-line utilities.
 - Apple Developer Program membership.
 - A `Developer ID Application` certificate in the signing keychain.
 - Notarisation credentials: a local Apple ID app-specific-password profile or an App Store Connect API key for GitHub Actions.
@@ -37,9 +37,9 @@ make notary-setup
 
 `notarytool` prompts for the app-specific password. The release command then refers only to the Keychain profile name.
 
-### GitHub Actions credentials
+### Disabled GitHub Actions example
 
-The active `.github/workflows/release.yml` uses an App Store Connect API key, not the local Apple ID profile. Configure these repository secrets:
+GitHub Actions are permanently disabled in this template. `.github/workflows/release.yml.disabled` is reference material that uses an App Store Connect API key rather than the local Apple ID profile. A derived repository that deliberately activates and reviews it needs these secrets:
 
 - `CERTIFICATE_P12_BASE64`
 - `CERTIFICATE_PASSWORD`
@@ -76,11 +76,11 @@ shasum -a 256 -c Starter-1.0.0-macos.zip.sha256
 
 Before publishing, extract the final zip on another Mac, launch it outside the build tree, confirm Gatekeeper acceptance, exercise permissions and sandbox behaviour, and inspect the version and icon.
 
-## GitHub release workflow
+## GitHub release example
 
-`.github/workflows/release.yml` is active for `v*` tags and manual dispatch. After validating the tag and checking out that exact ref, it imports the certificate, creates a temporary API-key notary profile, runs `make dist`, and creates or updates the matching GitHub release assets.
+`.github/workflows/release.yml.disabled` shows a `v*` tag/manual-dispatch release on a macOS runner. It is not executable while the `.disabled` suffix remains. A derived repository must review its runner, Xcode selection, credentials, permissions, and triggers before copying it to an active workflow name.
 
-The workflow currently uploads with `--clobber` when a GitHub release already exists. Treat published versions as immutable in normal operation; use replacement only to recover deliberately from a failed or partial workflow.
+The example uploads with `--clobber` when a GitHub release already exists. Treat published versions as immutable in normal operation; use replacement only to recover deliberately from a failed or partial workflow.
 
 ## Mac App Store distinction
 

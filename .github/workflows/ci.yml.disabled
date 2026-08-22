@@ -10,9 +10,11 @@ permissions:
 
 jobs:
   macos:
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v6
+      - name: Select Xcode 26.0.1
+        run: sudo xcode-select -s /Applications/Xcode_26.0.1.app/Contents/Developer
       - name: Repository checks
         run: make validate
       - name: Make workflow orchestration

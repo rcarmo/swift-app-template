@@ -22,10 +22,9 @@ struct ItemDetailView: View {
         Button(
           item.isFavorite ? "Remove from Favorites" : "Add to Favorites",
           systemImage: item.isFavorite ? "star.slash" : "star",
-          action: toggleFavorite
+          action: toggleFavorite,
         )
         .buttonStyle(.borderedProminent)
-        .frame(minHeight: AppTheme.Metrics.minimumControlSize)
       }
       .frame(maxWidth: AppTheme.Metrics.readableWidth, alignment: .leading)
       .frame(maxWidth: .infinity, alignment: .center)

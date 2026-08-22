@@ -1,6 +1,6 @@
 ---
 name: swift-concurrency
-description: Implement or audit Swift 6 concurrency, actor isolation, Sendable dependencies, task ownership, cancellation, clocks, and race-free UI updates.
+description: Implement or audit Swift 6.2 concurrency, MainActor default isolation, @concurrent work, Sendable dependencies, task ownership, cancellation, clocks, and race-free UI updates.
 license: MIT
 metadata:
   version: "1.0"
@@ -9,7 +9,7 @@ metadata:
 
 # Swift concurrency
 
-Read `Package.swift` and `references/concurrency-checklist.md`. The package uses Swift 6 language mode in every target. Use this skill for every asynchronous service, observable model, stream, task group, actor, or sendability change.
+Read `Package.swift` and `references/concurrency-checklist.md`. Every target uses Swift 6 language mode with MainActor default isolation, `InferIsolatedConformances`, and `NonisolatedNonsendingByDefault`. Use this skill for every asynchronous service, observable model, stream, task group, actor, sendability, `nonisolated`, or `@concurrent` change.
 
 ## Workflow
 
@@ -21,7 +21,7 @@ Read `Package.swift` and `references/concurrency-checklist.md`. The package uses
 6. Propagate cancellation; do not convert it into a user-facing failure accidentally.
 7. Prevent stale responses from overwriting newer state.
 8. Inject clocks or continuations for deterministic tests instead of sleeping.
-9. Run `make test` and `make package-build` under Swift 6 language mode; fix diagnostics at the boundary rather than using broad suppressions.
+9. Run `make test` and `make package-build` with Swift 6.2; fix diagnostics at the boundary rather than weakening package settings or using broad suppressions.
 
 ## Reject
 

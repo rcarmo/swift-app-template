@@ -2,7 +2,7 @@
 
 ## Repository contract
 
-This repository is a macOS-first SwiftUI application built with Swift Package Manager.
+This repository is a macOS 26 SwiftUI application built with Swift Package Manager 6.2 and Swift 6.2 language mode.
 
 - `Package.swift` defines the `AppCore` library, `Starter` executable product, deployment target, and tests.
 - `Sources/Application/StarterApp.swift` owns scene and dependency composition.
@@ -40,7 +40,7 @@ Read `.pi/skills/README.md`, then load only the skills required by the change. C
 - Organise code by feature and keep one meaningful type per Swift file.
 - Prefer SwiftUI and system controls. Isolate an AppKit bridge when SwiftUI lacks the required capability.
 - Do not add a package dependency without explaining why an Apple API or a local implementation is insufficient.
-- Preserve Swift 6 strict concurrency. Do not suppress it with broad `@unchecked Sendable` conformance.
+- Preserve MainActor default isolation, `InferIsolatedConformances`, `NonisolatedNonsendingByDefault`, and Swift 6.2 strict concurrency. Use `nonisolated` and `@concurrent` only at deliberate boundaries; do not suppress checking with broad `@unchecked Sendable` conformance.
 - Do not add speculative application targets. A second platform starts with its own explicit product requirement.
 
 Follow the local SwiftFormat and SwiftLint configurations. Use British spelling in documentation. Do not use force unwraps, force tries, direct `print`, swallowed user-action errors, or committed secrets.
@@ -67,7 +67,7 @@ For a rename change, run the helper in a disposable copy and check for stale pla
 - Tests cover changed behaviour and failure paths.
 - The assembled application has been run for non-trivial UI changes.
 - Keyboard, focus, window resizing, and accessibility have been reviewed where affected.
-- `Package.swift`, bundle metadata, commands, and documentation agree.
+- `Package.swift`, bundle metadata, Xcode/Swift requirements, commands, and documentation agree.
 - No build output, generated project, secret, certificate, or profile is committed.
 - `./scripts/check-skills.sh` passes.
 - `NOTICE.md` records any new implementation or substantial guidance source.

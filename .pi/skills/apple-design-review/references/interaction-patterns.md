@@ -2,7 +2,7 @@
 
 ## Keyboard and commands
 
-Expose primary actions through menus and commands with conventional shortcuts. Use Command-N, Command-F, Command-S, Command-W, Command-comma, Escape, Delete, and Return only when their standard meanings fit. Labels, tooltips, and menus should make shortcuts discoverable.
+Expose primary actions through menus and commands with conventional shortcuts. Use `@FocusedValue` and `focusedSceneValue` so commands follow the active window and disable when their action or selection is unavailable. Do not broadcast scene commands through global notifications. Use Command-N, Command-F, Command-S, Command-W, Command-comma, Escape, Delete, and Return only when their standard meanings fit. Labels, tooltips, and menus should make shortcuts discoverable.
 
 ## Search
 
@@ -18,7 +18,7 @@ Use optimistic updates only when rollback is safe and understandable. Preserve t
 
 ## Drag and drop, import, export, and sharing
 
-For content applications, evaluate drag-in and drag-out flows. Use transferable types and meaningful previews. Provide an accessible Import, Export, Share, Copy, or menu command alternative. Validate sandbox file access and security-scoped bookmarks where required.
+For content applications, evaluate drag-in and drag-out flows. Use `Transferable` types and meaningful previews. Provide an accessible Import, Export, Share, Copy, or menu command alternative. Use SwiftUI file panels, keep security-scoped access active while reading imported URLs, and add persisted security-scoped bookmarks only when later access is required. Remove the user-selected-file entitlement when the product has no file workflow.
 
 ## Hover, focus, and selection
 

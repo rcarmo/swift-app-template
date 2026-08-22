@@ -1,4 +1,4 @@
-public enum LoadPhase: Equatable, Sendable {
+public nonisolated enum LoadPhase: Equatable, Sendable {
   case idle
   case loading
   case loaded

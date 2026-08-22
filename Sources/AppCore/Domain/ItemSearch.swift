@@ -1,6 +1,6 @@
 import Foundation
 
-public enum ItemSearch {
+public nonisolated enum ItemSearch {
   public static func filter(_ items: [Item], query: String) -> [Item] {
     let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
     guard !trimmedQuery.isEmpty else { return items }

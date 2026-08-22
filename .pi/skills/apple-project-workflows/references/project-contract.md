@@ -10,7 +10,7 @@
 - `scripts/build-macos-app.sh`: deterministic `.app` assembly and local signing.
 - `Makefile`: public command interface.
 
-There is no generated project. SwiftPM compilation must remain usable without Homebrew or an IDE.
+There is no generated project. SwiftPM 6.2 compilation must remain usable without Homebrew or an IDE. `Package.swift` and `Info.plist` both target macOS 26. Every target preserves MainActor default isolation, `InferIsolatedConformances`, `NonisolatedNonsendingByDefault`, and Swift 6 language mode.
 
 ## Adding package code
 
@@ -40,7 +40,7 @@ The icon helper accepts a 1024-square source and generates `build/AppIcon.icns`.
 
 ## Continuous integration
 
-The repository preserves opt-in CI as `.github/workflows/ci.yml.disabled`. Activate it only by renaming it to `ci.yml` and reviewing the branches, runner, action versions, and required permissions. Keep either the disabled template or active workflow, not both. The release and pruning workflows remain active independently.
+GitHub Actions are permanently disabled in this template. `.github/workflows/` contains `.disabled` examples only, and static validation rejects active `.yml` or `.yaml` files. A derived repository may copy and review an example deliberately, but changes to this template must not activate CI, release, or scheduled workflows.
 
 ## Future iPadOS work
 

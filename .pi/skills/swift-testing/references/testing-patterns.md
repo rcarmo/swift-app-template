@@ -2,7 +2,7 @@
 
 ## Test shape
 
-Use descriptive lower-camel-case names that state behaviour. Keep setup, action, and expectations visually clear without ceremonial comments. Prefer one behavioural reason to fail per test; several related `#expect` statements are acceptable.
+Use sentence-style backtick names for Swift Testing cases, such as ``@Test func `load selects the first item`()``. Keep setup, action, and expectations visually clear without ceremonial comments. Prefer one behavioural reason to fail per test; several related `#expect` statements are acceptable.
 
 ## Suites and isolation
 
@@ -36,4 +36,4 @@ Previews help inspect states but are not tests. UI automation may use accessibil
 
 `swift test` runs the `AppCoreTests` target. `make package-build` compiles the `Starter` executable for the package's declared macOS target. Neither proves the `.app` layout, plist substitution, entitlements, signing, launch behaviour, menus, focus, or accessibility.
 
-Run `make build` on macOS for bundle evidence and manually exercise affected UI on the lowest supported macOS version and representative window/input configurations. If a future iPadOS application is added, define and document its own build and device/simulator matrix at that time.
+Run `make build` on macOS for bundle evidence and manually exercise affected UI on macOS 26 with representative window and input configurations. If a future iPadOS application is added, define and document its own build and device/simulator matrix at that time.

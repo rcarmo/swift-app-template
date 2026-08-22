@@ -9,7 +9,7 @@ metadata:
 
 # macOS release
 
-Read `docs/RELEASE.md`, `VERSION`, `Package.swift`, `Makefile`, bundle/release scripts, active workflows, and `references/release-checklist.md`. Load `../apple-project-workflows/SKILL.md` when configuration changes.
+Read `docs/RELEASE.md`, `VERSION`, `Package.swift`, `Makefile`, bundle/release scripts, disabled workflow examples, and `references/release-checklist.md`. Load `../apple-project-workflows/SKILL.md` when configuration changes.
 
 ## Preflight
 
@@ -30,7 +30,7 @@ Read `docs/RELEASE.md`, `VERSION`, `Package.swift`, `Makefile`, bundle/release s
 - Create a new distribution zip only after stapling; write and verify its checksum.
 - Extract and launch the final archive on another Mac outside the build tree.
 
-Local setup stores an Apple ID notary profile through `make notary-setup`. GitHub Actions creates an ephemeral profile from App Store Connect API-key secrets. Do not describe the two credential routes as interchangeable.
+Local setup stores an Apple ID notary profile through `make notary-setup`. The disabled GitHub Actions example creates an ephemeral profile from App Store Connect API-key secrets. Do not describe the two credential routes as interchangeable or imply that the example is active.
 
 ## Reporting
 

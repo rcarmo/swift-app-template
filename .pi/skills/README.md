@@ -10,14 +10,14 @@ These project-local skills are organised by functional domain for the SwiftPM ma
 | state ownership, dependencies, persistence, caches | `swift-architecture` |
 | actors, tasks, cancellation, Sendable, races | `swift-concurrency` |
 | stacks, split views, tabs, sheets, dialogs, deep links | `swiftui-navigation` |
-| VoiceOver, Dynamic Type, motion, contrast, focus | `apple-accessibility` |
-| native macOS layout, visual hierarchy, windows, keyboard and pointer interaction | `apple-design-review` |
+| VoiceOver, text scaling, motion, contrast, focus | `apple-accessibility` |
+| native macOS layout, scenes, menus, focused commands, keyboard, pointer, files and drag/drop | `apple-design-review` |
 | rendering, scrolling, startup, memory, energy profiling | `swiftui-performance` |
 | runtime/layout/hosting/restoration hardening | `swiftui-hardening` |
 | type scale, readable measure, custom fonts | `apple-typography` |
 | unit/model/integration/UI testing | `swift-testing` |
 | naming, readability, SwiftFormat, SwiftLint, logging | `swift-style-tooling` |
-| Package.swift, Make, app bundling, CI, rename/icons | `apple-project-workflows` |
+| Package.swift 6.2, macOS 26, Make, app bundling, CI, rename/icons | `apple-project-workflows` |
 | String Catalogs, formatting, plurals, RTL | `apple-localization` |
 | permissions, entitlements, privacy, keychain, sandbox | `apple-privacy-security` |
 | local signing, Developer ID release, notarisation and packaging | `apple-release` |

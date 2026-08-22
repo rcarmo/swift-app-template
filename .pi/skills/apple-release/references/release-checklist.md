@@ -7,7 +7,7 @@
 - The tag resolves to the intended commit.
 - `BUILD_NUMBER` policy is explicit; the bundler otherwise uses a UTC timestamp.
 - Product name, executable product, app name, bundle identifier, entitlements path, and output names agree.
-- `Package.swift` and `Resources/Info.plist` both require macOS 14.
+- `Package.swift` and `Resources/Info.plist` both require macOS 26; the build uses Swift 6.2/Xcode 26.
 
 ## Product metadata
 
@@ -27,7 +27,7 @@
 ## Credential routes
 
 - Local: `make notary-setup` stores an Apple ID app-specific password in a named `notarytool` Keychain profile.
-- GitHub Actions: repository secrets provide a base64 certificate and App Store Connect API key; the runner creates an ephemeral keychain and `ci-notary` profile.
+- Disabled GitHub Actions example: repository secrets provide a base64 certificate and App Store Connect API key; an explicitly activated derived workflow would create an ephemeral keychain and `ci-notary` profile.
 - Secrets are passed through environment or Keychain references and are never echoed, committed, or copied into release notes.
 
 ## Signing inspection

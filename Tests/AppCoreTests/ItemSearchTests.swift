@@ -9,17 +9,17 @@ struct ItemSearchTests {
   ]
 
   @Test
-  func emptyQueryPreservesItems() {
+  func `empty query preserves items`() {
     #expect(ItemSearch.filter(items, query: "  ") == items)
   }
 
   @Test
-  func queryMatchesTitleUsingLocalizedSearch() {
+  func `query matches title using localised search`() {
     #expect(ItemSearch.filter(items, query: "auro").map(\.title) == ["Aurora"])
   }
 
   @Test
-  func queryMatchesSummary() {
+  func `query matches summary`() {
     #expect(ItemSearch.filter(items, query: "network").map(\.title) == ["Borealis"])
   }
 }

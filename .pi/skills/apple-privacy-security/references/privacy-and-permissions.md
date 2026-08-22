@@ -25,7 +25,7 @@ Store tokens and passwords in Keychain with minimal access groups. Inject a cred
 
 ## Files and sandbox
 
-Use `NSOpenPanel`/`NSSavePanel` directly or SwiftUI import/export APIs for user-selected files. Persist security-scoped bookmarks only when durable access is needed, balance access calls, and recover from stale or moved bookmarks. Do not assume arbitrary filesystem access in the sandbox.
+Prefer SwiftUI import/export APIs for ordinary user-selected files; use `NSOpenPanel`/`NSSavePanel` only when their additional controls are required. Keep `com.apple.security.files.user-selected.read-write` only while this behaviour exists. Read imported URLs while security-scoped access is active. Persist security-scoped bookmarks only when durable access is needed, balance access calls, and recover from stale or moved bookmarks. Do not assume arbitrary filesystem access in the sandbox.
 
 ## Network
 

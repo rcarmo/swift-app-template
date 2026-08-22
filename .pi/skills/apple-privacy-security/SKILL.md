@@ -11,7 +11,7 @@ metadata:
 
 Read `references/privacy-and-permissions.md` when adding a capability, entitlement, permission prompt, credential, network client, file access, analytics, diagnostics, clipboard, camera, location, contacts, or release privacy declaration.
 
-The starter enables the application sandbox and no additional entitlement. Add capabilities only for product behaviour that exists.
+The starter enables the application sandbox plus user-selected read/write file access for its import/export example. Remove that entitlement if the derived product removes the file workflow, and add other capabilities only for behaviour that exists.
 
 ## Workflow
 

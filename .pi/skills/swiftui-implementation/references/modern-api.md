@@ -1,6 +1,6 @@
 # Current SwiftUI and Swift APIs
 
-Check each API against the macOS deployment target in `Package.swift`. Add an availability guard or raise the deployment target when an API is newer.
+The package targets macOS 26 and Swift 6.2. Check each API against that contract and every target that compiles the file.
 
 ## Prefer
 
@@ -10,7 +10,11 @@ Check each API against the macOS deployment target in `Package.swift`. Add an av
 - trailing `overlay(alignment:content:)` closures over legacy overloads.
 - `scrollIndicators(.hidden)` over initializer flags.
 - `sensoryFeedback` over custom AppKit haptic bridges where supported; Mac hardware support varies.
-- `@Entry` for custom environment, focus, transaction, or container keys where available.
+- `@Entry` for custom environment, focus, transaction, or container keys.
+- `@FocusedValue` plus `focusedSceneValue` for active-window commands and menu validation.
+- `WindowGroup`, auxiliary `Window`, and `Settings` for native macOS scene composition.
+- `fileImporter`, `fileExporter`, `Transferable`, `draggable`, and `dropDestination` for sandboxed file and transfer workflows.
+- `Table` for dense columnar macOS data.
 - generated asset accessors only when the package or application target enables them.
 - `ImageRenderer` for rendering SwiftUI content.
 - `#Preview` for previews.
@@ -31,10 +35,4 @@ Check each API against the macOS deployment target in `Package.swift`. Add an av
 
 ## Availability review
 
-For each new API:
-
-1. Check every target that compiles the file.
-2. Compare the SDK introduction with each target's deployment version.
-3. Use `#if os(...)` only when a second platform target creates a real compile-time seam.
-4. Use `if #available` when one source file needs a runtime fallback.
-5. Add a test or manual check for the fallback.
+The only application target requires macOS 26. Use current APIs directly and do not add `if #available`, legacy branches, or compatibility wrappers. Revisit availability only when `Package.swift` gains a real second platform or a lower deployment target.

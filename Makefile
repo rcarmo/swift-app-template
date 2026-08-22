@@ -8,9 +8,10 @@ CONFIGURATION ?= debug
 VERSION ?= $(shell head -n 1 VERSION 2>/dev/null)
 NOTARY_PROFILE ?= starter-notary
 APP := build/$(APP_NAME).app
+LSREGISTER := /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister
 
 .PHONY: help doctor quality-tools check validate skills workflow-test format lint test package-build \
-        build release run install uninstall icon notary-setup dist clean rename
+        build release run install uninstall register icon notary-setup dist clean rename
 
 help:
 	@echo "SwiftPM workflows (macOS):"
@@ -21,6 +22,7 @@ help:
 	@echo "  make run              Build and launch the app"
 	@echo "  make install          Install the app in /Applications"
 	@echo "  make uninstall        Remove it from /Applications"
+	@echo "  make register         Refresh LaunchServices for the local build"
 	@echo ""
 	@echo "Quality and maintenance:"
 	@echo "  make doctor           Check macOS and Apple command-line tools"
@@ -38,7 +40,8 @@ help:
 
 doctor:
 	@[[ "$$(uname -s)" == "Darwin" ]] || { echo "error: the app requires macOS"; exit 1; }
-	@command -v swift >/dev/null || { echo "error: install a Swift 6 toolchain"; exit 1; }
+	@command -v swift >/dev/null || { echo "error: install Swift 6.2 or newer"; exit 1; }
+	@swift --version | awk '/Swift version/ { split($$3, v, "."); if (v[1] < 6 || (v[1] == 6 && v[2] < 2)) exit 1 }' || { echo "error: Swift 6.2 or newer is required"; exit 1; }
 	@command -v codesign >/dev/null || { echo "error: codesign is unavailable"; exit 1; }
 	@command -v xcrun >/dev/null || { echo "error: xcrun is unavailable"; exit 1; }
 	@swift --version
@@ -87,10 +90,15 @@ run: build
 install: build
 	rm -rf "/Applications/$(APP_NAME).app"
 	cp -R "$(APP)" /Applications/
-	@echo "Installed /Applications/$(APP_NAME).app"
+	"$(LSREGISTER)" -f "/Applications/$(APP_NAME).app"
+	@echo "Installed and registered /Applications/$(APP_NAME).app"
 
 uninstall:
 	rm -rf "/Applications/$(APP_NAME).app"
+
+register: build
+	"$(LSREGISTER)" -f "$(APP)"
+	@echo "Registered $(APP) with LaunchServices"
 
 icon: doctor
 	@test -n "$(PNG)" || { echo "usage: make icon PNG=path/to/icon-1024.png"; exit 64; }

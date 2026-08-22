@@ -28,7 +28,7 @@ struct ItemsDetailContent: View {
       ContentUnavailableView(
         "Select an Item",
         systemImage: "sidebar.left",
-        description: Text("Choose an item from the sidebar to see its details.")
+        description: Text("Choose an item from the sidebar to see its details."),
       )
     }
   }

@@ -14,7 +14,7 @@ SCRIPT
 cat > "$tmp/bin/swift" <<'SCRIPT'
 #!/bin/sh
 printf 'swift %s\n' "$*" >> "$MOCK_LOG"
-if [ "${1:-}" = "--version" ]; then echo 'Swift version 6.0'; fi
+if [ "${1:-}" = "--version" ]; then echo 'Swift version 6.2'; fi
 exit "${MOCK_SWIFT_EXIT:-0}"
 SCRIPT
 for command in codesign xcrun swiftformat swiftlint; do

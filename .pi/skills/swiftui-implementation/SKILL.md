@@ -45,7 +45,7 @@ Use this skill for any SwiftUI code change. Load only the related domain skills.
 
 ## Baseline policy
 
-- Use Swift 6 strict concurrency and current APIs available at the deployment target in `Package.swift`.
+- Use Swift 6.2 strict concurrency and current macOS 26 APIs directly; do not add availability fallbacks.
 - Prefer pure SwiftUI. Add an AppKit bridge only when SwiftUI lacks the required capability, and isolate it at a named boundary.
 - Do not add third-party packages without explicit justification and approval.
 - Keep one meaningful type per file and organise by feature.

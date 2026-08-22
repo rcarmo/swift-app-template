@@ -36,5 +36,5 @@ Read `Package.swift`, `Makefile`, `.github/workflows/`, scripts, and `references
 - Keep scripts compatible with macOS system Bash.
 - Sign the complete `.app`; permissions/TCC attach to bundle identity rather than the raw SwiftPM executable.
 - Entitlements are minimal by default; each capability needs product justification and a denied/restricted path.
-- Continuous integration ships as `.github/workflows/ci.yml.disabled`; activate it only by deliberately renaming it to `ci.yml` and reviewing its triggers.
+- GitHub Actions remain permanently disabled in this template; keep every workflow example suffixed `.disabled` and reject active `.yml`/`.yaml` files.
 - Report SwiftPM compilation, app assembly, launch, signing, and notarisation as distinct checks.

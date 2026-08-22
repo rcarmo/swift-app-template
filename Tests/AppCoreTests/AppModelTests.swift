@@ -5,7 +5,7 @@ import Testing
 @MainActor
 struct AppModelTests {
   @Test
-  func loadSelectsFirstItem() async {
+  func `load selects the first item`() async {
     let item = Item(title: "Loaded", summary: "From a test service")
     let model = AppModel(itemService: StubItemService(result: .success([item])))
 
@@ -17,7 +17,7 @@ struct AppModelTests {
   }
 
   @Test
-  func loadExposesAUserFacingFailure() async {
+  func `load exposes a user-facing failure`() async {
     let model = AppModel(itemService: StubItemService(items: nil))
 
     await model.loadIfNeeded()
@@ -26,8 +26,8 @@ struct AppModelTests {
   }
 
   @Test
-  func toggleFavoriteMutatesTheRequestedItem() async {
-    let item = Item(title: "Favorite", summary: "Toggle this item")
+  func `toggle favourite mutates the requested item`() async {
+    let item = Item(title: "Favourite", summary: "Toggle this item")
     let model = AppModel(itemService: StubItemService(result: .success([item])))
     await model.loadIfNeeded()
 
@@ -35,9 +35,34 @@ struct AppModelTests {
 
     #expect(model.items.first?.isFavorite == true)
   }
+
+  @Test
+  func `import merges items and selects the first import`() {
+    let existing = Item(id: "existing", title: "Existing", summary: "Before import")
+    let imported = Item(id: "imported", title: "Imported", summary: "From disk")
+    let model = AppModel(itemService: StubItemService(items: []), items: [existing], phase: .loaded)
+
+    model.importItems([imported])
+
+    #expect(Set(model.items.map(\.id)) == ["existing", "imported"])
+    #expect(model.selection == imported.id)
+  }
+
+  @Test
+  func `delete selection moves selection to the first remaining item`() {
+    let first = Item(id: "first", title: "First", summary: "Keep")
+    let second = Item(id: "second", title: "Second", summary: "Delete")
+    let model = AppModel(itemService: StubItemService(items: []), items: [first, second], phase: .loaded)
+    model.selection = second.id
+
+    model.deleteSelection()
+
+    #expect(model.items == [first])
+    #expect(model.selection == first.id)
+  }
 }
 
-private struct StubItemService: ItemServing {
+private nonisolated struct StubItemService: ItemServing {
   let items: [Item]?
 
   init(result: Result<[Item], TestError>) {
@@ -54,7 +79,7 @@ private struct StubItemService: ItemServing {
   }
 }
 
-private enum TestError: LocalizedError {
+private nonisolated enum TestError: LocalizedError {
   case unavailable
 
   var errorDescription: String? {

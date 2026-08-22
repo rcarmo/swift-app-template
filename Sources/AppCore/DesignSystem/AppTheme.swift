@@ -12,6 +12,6 @@ public enum AppTheme {
     public static let sidebarMinimum = 220.0
     public static let sidebarIdeal = 280.0
     public static let sidebarMaximum = 360.0
-    public static let minimumControlSize = 44.0
+    public static let cornerRadius = 10.0
   }
 }

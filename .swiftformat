@@ -1,4 +1,4 @@
---swift-version 6.0
+--swift-version 6.2
 --language-mode 6
 --indent 2
 --max-width 120
@@ -13,4 +13,4 @@
 --self remove
 --trim-whitespace always
 --exclude .build,build,dist
---enable blankLinesBetweenScopes,consecutiveSpaces,duplicateImports,hoistPatternLet,isEmpty,linebreakAtEndOfFile,preferCountWhere,redundantBackticks,redundantParens,redundantReturn,redundantSelf,redundantType,sortImports,trailingCommas,trailingSpace,typeSugar
+--enable blankLinesBetweenScopes,consecutiveSpaces,duplicateImports,environmentEntry,hoistPatternLet,isEmpty,linebreakAtEndOfFile,noForceTryInTests,noForceUnwrapInTests,noGuardInTests,preferCountWhere,redundantAsync,redundantBackticks,redundantEmptyView,redundantParens,redundantReturn,redundantSelf,redundantSwiftTestingSuite,redundantSwiftUIGroup,redundantType,redundantViewBuilder,sortImports,swiftTestingTestCaseNames,testSuiteAccessControl,trailingCommas,trailingSpace,typeSugar
