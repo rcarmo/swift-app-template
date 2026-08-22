@@ -10,7 +10,7 @@ MAC_DESTINATION ?= platform=macOS
 VERSION ?= $(shell head -n 1 VERSION 2>/dev/null)
 NOTARY_PROFILE ?= starter-notary
 
-.PHONY: help bootstrap deps validate generate resolve format lint test test-package \
+.PHONY: help bootstrap deps validate skills generate resolve format lint test test-package \
         build-ios build-macos build-tvos build-visionos build-watchos app-macos run-macos icon \
         notary-setup dist clean rename
 
@@ -18,6 +18,7 @@ help:
 	@echo "Setup and quality:"
 	@echo "  make bootstrap        Install Homebrew tools and generate the Xcode project"
 	@echo "  make validate         Linux-safe repository/static checks"
+	@echo "  make skills           Validate local skill metadata and coverage"
 	@echo "  make generate         Generate $(PROJECT) with XcodeGen"
 	@echo "  make format           Apply SwiftFormat"
 	@echo "  make lint             Verify SwiftFormat and SwiftLint"
@@ -56,6 +57,9 @@ bootstrap:
 
 validate:
 	./scripts/static-checks.sh
+
+skills:
+	./scripts/check-skills.sh
 
 generate:
 	@command -v xcodegen >/dev/null || { echo "error: brew install xcodegen"; exit 1; }

@@ -1,23 +1,38 @@
 ---
 name: apple-design-review
-description: Review a SwiftUI feature across Apple platforms for native layout, interaction, accessibility, empty/error states, input methods, and visual adaptation.
+description: Design or review native SwiftUI interfaces across iOS, iPadOS, macOS, Mac Catalyst, tvOS, visionOS, and watchOS, including layout, visual hierarchy, interaction, input, and platform adaptation.
+license: MIT
+metadata:
+  version: "2.0"
+  provenance: Adapted from ceorkm/macos-design-skill, twostraws design guidance, and project-specific cross-Apple rules; see NOTICE.md.
 ---
 
 # Apple-platform design review
 
-Read `docs/DESIGN.md` and inspect the actual SwiftUI implementation. If screenshots or previews are available, review both light and dark appearance at compact and expanded sizes.
+This is the visual and interaction entry point. Read `docs/DESIGN.md` and the references relevant to the task:
 
-## Review sequence
+- `references/layout-and-composition.md`
+- `references/visual-system.md`
+- `references/interaction-patterns.md`
+- `references/platform-matrix.md`
 
-1. **Hierarchy:** Is the primary task clear? Does navigation match the content model on each platform?
-2. **States:** Are loading, empty, filtered-empty, failure, retry, permission, and offline states useful rather than blank?
-3. **System fit:** Are native containers, controls, menus, Settings, symbols, materials, and typography used before custom equivalents?
-4. **Accessibility:** Check Dynamic Type, VoiceOver semantics/order, Voice Control labels, 44-point touch targets, contrast, Differentiate Without Color, and Reduce Motion.
-5. **Input:** Check touch, pointer, hardware keyboard, macOS menus/shortcuts, tvOS focus/remote, and watchOS crown/compact layout as relevant.
-6. **Adaptation:** Resize windows and change size classes. Reject fixed screen bounds and desktop layouts compressed onto small devices.
-7. **Feedback:** Every command needs immediate visible state; destructive actions need clear wording and suitable confirmation or undo.
-8. **Content workflows:** Consider native search, selection, import/export, share, and drag-and-drop where the product handles documents or media.
+Load `../apple-accessibility/SKILL.md` for the accessibility gate and `../swiftui-navigation/SKILL.md` for navigation/presentation changes.
+
+## Design workflow
+
+1. Name the primary user task and content hierarchy.
+2. Choose system window/scene, navigation, toolbar, list/table/grid, form, and presentation patterns.
+3. Sketch every state: loading, populated, empty, search-empty, failure, permission denied, offline, selection absent.
+4. Define actions across touch, pointer, keyboard, remote/focus, crown, voice, and drag/drop as applicable.
+5. Use semantic system typography, color, materials, symbols, spacing, and controls first.
+6. Adapt composition at platform seams; do not scale one screenshot to every device.
+7. Review light/dark, resizing, localization expansion, Dynamic Type, contrast, and reduced motion.
+8. Run previews/screenshots for representative states, then validate live behavior on the lowest supported OS/device class.
+
+## Native-system rule
+
+The audited macOS source also addresses web/Electron simulations. This repository is native SwiftUI: do not draw traffic lights, fake title bars, recreate materials with arbitrary RGBA values, or hard-code CSS-derived measurements. Let macOS own window chrome; use toolbar/titlebar/window APIs, semantic materials/colors, and controls.
 
 ## Output
 
-Group findings as blockers, important improvements, and polish. Name the affected platform and accessibility setting. Avoid proposing ornamental custom chrome when a system behavior is available.
+Group findings into blockers, important improvements, and polish. Name the platform, window/size class, input method, and affected state. Prefer fewer clearer controls over ornamental chrome.

@@ -1,34 +1,56 @@
 ---
 name: swiftui-implementation
-description: Implement or review SwiftUI features in this cross-Apple template using its architecture, data-flow, concurrency, testing, and API rules.
+description: Implement, refactor, or review SwiftUI features in this cross-Apple template using modern APIs, maintainable view composition, correct data flow, performance checks, and project validation.
+license: MIT
+metadata:
+  version: "2.0"
+  provenance: Adapted from twostraws/swiftui-agent-skill and local template conventions; see NOTICE.md.
 ---
 
 # SwiftUI implementation
 
+Use this as the main entry point for any SwiftUI code change. It orchestrates the focused local skills; load only the domains relevant to the task.
+
 ## Read first
 
-Read `AGENTS.md`, `docs/ARCHITECTURE.md`, and the neighboring feature files. Read `docs/DESIGN.md` when changing presentation or interaction.
+1. `AGENTS.md` and the relevant document under `docs/`.
+2. Neighboring files in the feature.
+3. `references/modern-api.md` and `references/view-composition.md`.
+4. Other skills as needed:
+   - state/dependencies: `../swift-architecture/SKILL.md`
+   - asynchronous work: `../swift-concurrency/SKILL.md`
+   - navigation, sheets, alerts: `../swiftui-navigation/SKILL.md`
+   - accessibility: `../apple-accessibility/SKILL.md`
+   - visual/platform behavior: `../apple-design-review/SKILL.md`
+   - typography: `../apple-typography/SKILL.md`
+   - profiling/performance: `../swiftui-performance/SKILL.md`
+   - runtime/layout hardening: `../swiftui-hardening/SKILL.md`
+   - tests: `../swift-testing/SKILL.md`
+   - style/tooling: `../swift-style-tooling/SKILL.md`
+   - project targets/builds: `../apple-project-workflows/SKILL.md`
+   - user-facing text: `../apple-localization/SKILL.md`
+   - permissions, data, files, network, secrets: `../apple-privacy-security/SKILL.md`
+   - distribution implications: `../apple-release/SKILL.md`
 
-## Workflow
+## Implementation workflow
 
-1. State the user outcome and supported platforms.
-2. List loading, populated, empty, failure, permission, and offline states that apply.
-3. Put pure values/operations in `Domain` and external effects behind a narrow `Sendable` protocol.
-4. Inject the dependency at the app boundary. Coordinate mutable UI state in an `@MainActor @Observable` type.
-5. Build small feature-owned views. Keep local state private and send named intents to the model.
-6. Use platform-appropriate `NavigationStack`/`NavigationSplitView`, typed destinations, `sheet(item:)`, and dialogs attached to their triggering control.
-7. Use current APIs: `foregroundStyle`, `clipShape(.rect(cornerRadius:))`, value-bound animation, `sensoryFeedback`, `ContentUnavailableView`, format styles, and `task` for asynchronous view work.
-8. Add deterministic Swift Testing coverage for pure logic and state transitions.
-9. Run `make format`, `make lint`, `make test`, and affected platform builds.
+1. Define the user outcome and affected platforms.
+2. Enumerate loading, populated, empty, search-empty, failure, permission, offline, and cancellation states that apply.
+3. Identify the state owner, dependency boundary, navigation value, and test seam before writing views.
+4. Implement the narrowest vertical slice with system components.
+5. Extract meaningful subviews into feature-owned files; do not create abstractions with only one speculative use.
+6. Add deterministic tests for pure behavior and state transitions.
+7. Review modern API, view identity, accessibility, platform adaptation, and performance.
+8. Run the strongest available gates and report anything not run.
 
-## Reject these patterns
+## Baseline policy
 
-- `ObservableObject`/`@Published` for new code when Observation works.
-- service locators, global mutable state, networking or persistence in a view.
-- `NavigationView`, destination-bearing legacy links mixed with typed destinations, `AnyView`, unnecessary `GeometryReader`, or `UIScreen.main.bounds`.
-- force unwraps/tries, GCD in new concurrency code, `Task.sleep(nanoseconds:)`, broad `Task.detached`, or unchecked sendability.
-- custom controls that regress semantics, focus, keyboard behavior, or accessibility.
+- Use Swift 6 strict concurrency and current APIs available at the deployment targets in `Package.swift` and `project.yml`.
+- Prefer pure SwiftUI. Add UIKit/AppKit bridges only when the required capability is unavailable, and isolate the bridge.
+- Do not add third-party packages without explicit justification and approval.
+- Keep one meaningful type per file and organise by feature.
+- Report genuine correctness, accessibility, performance, or maintenance issues; do not invent findings to fill a review.
 
 ## Review output
 
-Report genuine issues by file and line, explain the consequence, and show the smallest correction. Prioritise correctness, accessibility, data races, navigation, and performance before style.
+Group findings by file. For each issue, give the line or symbol, consequence, applicable rule, and smallest correction. End with a prioritized summary and validation status. Skip files without findings.

@@ -9,7 +9,28 @@ Maintain this repository as a small, modern, cross-Apple SwiftUI starter. Prefer
 1. Read `README.md` and the relevant file under `docs/`.
 2. Inspect `project.yml`, `Package.swift`, and neighboring source files.
 3. For a feature or behavior change, record concise answers to the refinement questions in `docs/REFINEMENT.md` or a feature-specific design note.
-4. Use the matching skill in `.pi/skills/` for SwiftUI work, design review, or release work.
+4. Read `.pi/skills/README.md` and load the narrowest matching local skills. Use `swiftui-implementation` as the general SwiftUI orchestrator.
+
+## Local skill routing
+
+| Change | Required local skills |
+|---|---|
+| SwiftUI feature | `swiftui-implementation`; then relevant domains below |
+| state/dependencies/persistence | `swift-architecture` |
+| async/tasks/actors | `swift-concurrency` |
+| navigation/presentation | `swiftui-navigation` |
+| any user interface | `apple-accessibility` and `apple-design-review` |
+| performance/profiling | `swiftui-performance` |
+| runtime/layout/restoration defects | `swiftui-hardening` |
+| typography/custom fonts | `apple-typography` |
+| tests | `swift-testing` |
+| style/tool configuration | `swift-style-tooling` |
+| XcodeGen/Package/Make/CI/icons/rename | `apple-project-workflows` |
+| user-facing strings/formatting | `apple-localization` |
+| permissions/data/secrets/network/files | `apple-privacy-security` |
+| distribution | `apple-release` |
+
+Read each selected `SKILL.md` and only the referenced files needed for the task. The mapping from audited upstream skills to local domains is documented in `.pi/skills/README.md`.
 
 ## Architecture rules
 
@@ -67,4 +88,5 @@ On non-macOS hosts, only `make validate` is expected to work. Never report nativ
 - Accessibility and each target platform have been reviewed.
 - Documentation and `project.yml` match implementation.
 - No generated project, secrets, build output, or signing files are committed.
+- Local skill metadata/index remain valid (`./scripts/check-skills.sh`).
 - `NOTICE.md` is updated if new source or substantial guidance is incorporated.

@@ -14,6 +14,7 @@ app_entry_count="$(find Sources/Application -type f -name '*App.swift' -print | 
 }
 
 while IFS= read -r script; do bash -n "$script"; done < <(find scripts -type f -name '*.sh' -print)
+./scripts/check-skills.sh
 
 if grep -RInE '[[:blank:]]+$' --exclude-dir=.git --exclude-dir=.build --exclude='*.png' .; then
   echo "error: trailing whitespace found" >&2

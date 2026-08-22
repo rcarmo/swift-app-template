@@ -14,7 +14,7 @@ The template keeps domain and application logic in a testable Swift package and 
 - **Cross-Apple XcodeGen project** for iOS/iPadOS, native macOS, Mac Catalyst, tvOS, visionOS, and watchOS, with distinct Mac bundle identifiers.
 - **macOS packaging** using the generated Xcode target, code signing, notarisation, stapling, and checksums.
 - **SwiftFormat and SwiftLint policy**, GitHub Actions, tests, static repository checks, app-icon and rename helpers.
-- **Agent instructions and reusable skills** under `AGENTS.md` and `.pi/skills/`.
+- **Agent instructions and 15 reusable local skills** under `AGENTS.md` and `.pi/skills/`, covering SwiftUI, architecture, concurrency, navigation, accessibility, design, typography, performance, runtime hardening, testing, style/tooling, project workflows, localization, privacy/security, and release.
 
 ## Requirements
 
@@ -99,7 +99,7 @@ Application entry → AppCore composition → features → application/domain pr
 
 Views render state and send intents. `AppModel` coordinates state transitions. Services perform external work behind `Sendable` protocols. Pure domain transformations remain independent of SwiftUI where practical.
 
-See [Architecture](docs/ARCHITECTURE.md), [Design](docs/DESIGN.md), [Testing](docs/TESTING.md), and [Release](docs/RELEASE.md) for the full contracts.
+See [Architecture](docs/ARCHITECTURE.md), [Design](docs/DESIGN.md), [Testing](docs/TESTING.md), and [Release](docs/RELEASE.md) for the full contracts. Agent skill routing and upstream-to-local coverage are documented in [`.pi/skills/README.md`](.pi/skills/README.md).
 
 ## Release a macOS build
 

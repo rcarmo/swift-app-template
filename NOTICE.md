@@ -9,7 +9,7 @@ This repository is an original implementation assembled after studying the proje
 - Licence in audited repository: MIT
 - Copyright notice: Copyright (c) 2026 Paul Hudson
 - Influence: policy-level guidance for current SwiftUI APIs, Observation data flow, typed navigation, accessibility, performance, concurrency, hygiene, and review structure.
-- Reuse boundary: this template restates and adapts principles in its own project-specific documentation and code. It does not vendor the upstream skill or reference files.
+- Reuse boundary: the local `.pi/skills/` suite adapts these principles into project-specific functional domains and independently worded reference files. It does not vendor verbatim upstream skill/reference files. The local skill index maps every audited upstream domain to its adaptation.
 
 MIT notice for the audited source:
 
@@ -38,7 +38,7 @@ MIT notice for the audited source:
 - Licence in audited repository: MIT
 - Copyright notice: Copyright (c) 2012 Airbnb
 - Influence: readability-oriented Swift style, two-space indentation, line-length policy, naming, safe formatting/lint division, and rules discouraging direct standard-output logs, unchecked sendability, and legacy file literals.
-- Reuse boundary: local `.swiftformat` and `.swiftlint.yml` are smaller, independently selected configurations suited to this template; the upstream formatter plugin and full configurations are not vendored.
+- Reuse boundary: `swift-style-tooling`, `swift-testing`, `.swiftformat`, and `.swiftlint.yml` are smaller project-specific adaptations. The upstream command plugin and full configurations are not vendored.
 
 MIT notice for the audited source:
 
@@ -74,7 +74,13 @@ MIT notice for the audited source:
 - Audited revision: `8f528a2364f996cd42f02a10b1b27198a74ca2a3`
 - Licence status at audit: the README says “MIT”; no standalone licence file or complete copyright/licence notice was found.
 - Influence: reference-level prompts to treat keyboard access, search, drag-and-drop, light/dark appearance, progressive disclosure, native window composition, and interaction feedback as first-class macOS concerns.
-- Reuse boundary: the web/Electron CSS examples and fixed-value design system were not copied. This template translates general concerns into original, system-first SwiftUI guidance.
+- Reuse boundary: `apple-design-review` and `apple-typography` translate the general concerns into independently worded, system-first native SwiftUI guidance. The web/Electron CSS examples, fixed values, and fake-window implementation material were not copied.
+
+## Local skill suite
+
+The project-local skills are distributed under this repository's MIT licence. Their `metadata.provenance` fields identify adapted inputs, and `.pi/skills/README.md` maps source domains to local skills. The suite intentionally refactors source guidance by function rather than reproducing upstream repository names or file layouts.
+
+The local suite includes original extensions for domains that were referenced or required but not supplied as complete audited skills: concurrency, testing, typography, performance profiling, runtime hardening, localization, privacy/security, project generation, and release operations.
 
 ## Other tools
 
