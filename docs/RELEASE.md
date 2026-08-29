@@ -1,6 +1,6 @@
 # macOS release runbook
 
-The supplied direct-distribution path builds the SwiftPM executable, assembles a macOS `.app`, signs the complete bundle with hardened runtime, notarises it, staples the ticket, passes Gatekeeper assessment, and creates a checksummed zip. It does not use an Xcode project or `xcodebuild`.
+The supplied direct-distribution path builds the SwiftPM executable, preserves private crash symbols, strips symbol/debug information from the shipped Mach-O, assembles a macOS `.app`, signs the complete bundle with hardened runtime, notarises it, staples the ticket, passes Gatekeeper assessment, and creates a checksummed zip. It does not use an Xcode project or `xcodebuild`.
 
 ## Version contract
 
@@ -58,17 +58,23 @@ NOTARY_PROFILE=starter-notary \
 make dist VERSION="$(cat VERSION)"
 ```
 
-`make release-check` always uses the release configuration. `make dist` runs it first: repository and skill validation, mocked workflow tests, strict formatting/linting, Swift Testing, and release-configuration executable compilation. Distribution therefore requires SwiftFormat and SwiftLint on `PATH` in addition to the signing and notarisation prerequisites.
+`make release-check` always uses the release configuration. `make dist` runs it first: repository and skill validation, mocked workflow tests, strict formatting/linting, Swift Testing, release-configuration executable compilation, hardened application assembly, and Mach-O/dSYM verification. Distribution therefore requires SwiftFormat and SwiftLint on `PATH` in addition to the signing and notarisation prerequisites.
 
 The release script:
 
 1. removes previous `build` and `dist` output;
-2. compiles the executable product in release mode;
-3. creates `build/Starter.app`, substitutes bundle identity/version/build metadata, copies SwiftPM resource bundles and an optional icon, and signs it;
-4. re-signs the complete app with hardened runtime and a secure timestamp;
-5. verifies the signature and creates a temporary notarisation zip;
-6. submits with `notarytool --wait`, staples and validates the ticket, and runs `spctl --assess`;
-7. creates `dist/Starter-<version>-macos.zip`, writes and verifies its SHA-256 file, and removes the temporary archive.
+2. compiles the executable product in release mode with cross-module optimisation and linker dead stripping;
+3. creates `build/Symbols/Starter.app.dSYM`, verifies that its UUID matches the executable, and keeps it outside the distributed application;
+4. removes debug entries, local symbols, Swift nlist symbols, and the Mach-O nlist string table from the copied executable;
+5. verifies that no debug section or nlist symbol entry remains, then signs the assembled application;
+6. re-signs the complete app with hardened runtime and a secure timestamp;
+7. re-verifies hardening and the signature, then creates a temporary notarisation zip;
+8. submits with `notarytool --wait`, staples and validates the ticket, and runs `spctl --assess`;
+9. creates `dist/Starter-<version>-macos.zip`, writes and verifies its SHA-256 file, and removes the temporary archive.
+
+Archive `build/Symbols/Starter.app.dSYM` privately with the exact release commit and version for crash symbolication. Do not add it to the public distribution archive. `make hardening-check` performs an ad-hoc-signed release assembly and verifies the same invariants without notarisation credentials; `make verify-hardening` rechecks the current release application without rebuilding it. The Makefile owns the release compiler/linker flags and passes them to the bundle assembler.
+
+These measures redact the conventional symbol table and remove shipped debug data; they do not make a client binary secret. Runtime-required exports, Swift and Objective-C metadata, strings, assets, network protocols, and observable behaviour can still aid analysis. Keep credentials and authoritative security decisions outside the application. Hidden reflection-disabling compiler flags are deliberately not used because SwiftUI and other runtime consumers can require that metadata.
 
 The final distribution archive is created only after stapling. The checksum contains the archive basename, so downloaded `.zip` and `.sha256` assets can be verified in any directory:
 

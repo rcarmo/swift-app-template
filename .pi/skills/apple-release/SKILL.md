@@ -23,12 +23,15 @@ Read `docs/RELEASE.md`, `VERSION`, `Package.swift`, `Makefile`, bundle/release s
 ## Direct release
 
 - Build the SwiftPM executable in release mode and assemble the `.app`.
+- Preserve a private UUID-matched dSYM, strip debug/local/Swift nlist symbols from the distributed executable, and verify the result before signing.
 - Sign the complete bundle with hardened runtime, a secure timestamp, and a Developer ID Application identity.
 - Verify the signature before notarisation.
 - Create a temporary zip, submit with `notarytool`, wait for acceptance, then staple and validate.
 - Run Gatekeeper assessment.
 - Create a new distribution zip only after stapling; write and verify its checksum.
 - Extract and launch the final archive on another Mac outside the build tree.
+
+Treat stripping and symbol redaction as cost-raising measures, not a secrecy boundary. Do not remove Swift reflection/runtime metadata blindly, publish the private dSYM, embed credentials, or move authoritative security decisions into the client.
 
 Local setup stores an Apple ID notary profile through `make notary-setup`. The disabled GitHub Actions example creates an ephemeral profile from App Store Connect API-key secrets. Do not describe the two credential routes as interchangeable or imply that the example is active.
 

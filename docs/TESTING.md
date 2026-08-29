@@ -6,7 +6,7 @@
 2. **Static validation** checks the SwiftPM-only repository shape, macOS 26/Swift 6.2/concurrency settings, disabled workflow policy, required files and Make targets, shell syntax, local skills, whitespace, common committed-secret forms, and plist/JSON syntax when host tools are available.
 3. **Workflow tests** use stub executables to verify Make command wiring and failure propagation without compiling Swift.
 4. **SwiftPM compilation** builds the executable product and catches type, availability, and strict-concurrency failures for the current macOS package.
-5. **Assembled-app validation** on macOS covers bundle creation, plist substitution, resources, entitlements, and code signing.
+5. **Assembled-app validation** on macOS covers bundle creation, plist substitution, resources, entitlements, code signing, release nlist/debug stripping, and private dSYM UUID matching.
 6. **Manual acceptance** covers runtime interaction, accessibility, window behaviour, permissions, and distribution on a real Mac.
 
 The starter does not contain UI automation, snapshot tests, persistence/network integration tests, release-credential tests, or exhaustive overlapping-operation coverage. Add only the coverage required by the derived application.
@@ -16,13 +16,15 @@ Tests use Swift Testing. Keep identifiers, dates, clocks, locales, and service r
 ## Local gates
 
 ```sh
-make validate       # repository, script, resource, and skill checks
-make workflow-test  # mocked Make orchestration; no Swift compilation
-make lint           # optional SwiftFormat and SwiftLint gate
-make test           # AppCoreTests through SwiftPM
-make package-build  # compile the Starter product through SwiftPM
-make build          # assemble and sign a real macOS .app
-make release-check  # complete automated preflight before distribution
+make validate         # repository, script, resource, and skill checks
+make workflow-test    # mocked Make orchestration; no Swift compilation
+make lint             # optional SwiftFormat and SwiftLint gate
+make test             # AppCoreTests through SwiftPM
+make package-build    # compile the Starter product through SwiftPM
+make build            # assemble and sign a real macOS .app
+make hardening-check  # assemble and verify a stripped release app plus private dSYM
+make verify-hardening # recheck the current release app and private dSYM
+make release-check    # complete automated preflight before distribution
 ```
 
 `make build` and launch acceptance require macOS. The default local signature is ad hoc. A successful `make workflow-test` proves only that Make invokes the expected commands.

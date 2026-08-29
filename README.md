@@ -10,6 +10,7 @@ The template combines the strongest current practices from the projects in `NOTI
 - compiler-checked `Sendable`, actor-backed services, structured tasks, and explicit `@concurrent` work;
 - native macOS windows, Settings, commands, menus, focus, keyboard, pointer, tables, import/export, `Transferable`, and drag and drop;
 - Swift Testing plus SwiftFormat and SwiftLint policy;
+- release-only dead-code elimination, symbol redaction, debug stripping, and private dSYM preservation;
 - SwiftPM executable builds and manual `.app` assembly without an Xcode project.
 
 ## Requirements
@@ -32,7 +33,7 @@ make test
 make build
 ```
 
-`make build` compiles with SwiftPM 6.2, creates `build/MyApp.app`, substitutes bundle metadata, copies SwiftPM resources, and signs the complete bundle ad hoc.
+`make build` compiles a debuggable development application with SwiftPM 6.2, creates `build/MyApp.app`, substitutes bundle metadata, copies SwiftPM resources, and signs the complete bundle ad hoc. Use `make release` for an optimised, stripped, ad-hoc-signed build.
 
 ## Included macOS patterns
 
@@ -58,6 +59,9 @@ These are reference implementations, not requirements for every derived product.
 |---|---|
 | `make` or `make build` | Compile, assemble, and ad-hoc sign `build/Starter.app` |
 | `make package-build` | Compile the `Starter` executable with SwiftPM |
+| `make release` | Assemble an optimised, stripped, ad-hoc-signed release application |
+| `make hardening-check` | Build and verify release symbol/debug stripping plus the private dSYM |
+| `make verify-hardening` | Verify the current release executable and private dSYM without rebuilding |
 | `make test` | Run `AppCoreTests` with Swift Testing |
 | `make run` | Build and open the application |
 | `make install` | Replace `/Applications/Starter.app` and register it with LaunchServices |
@@ -68,7 +72,7 @@ These are reference implementations, not requirements for every derived product.
 | `make format` | Apply SwiftFormat and safe SwiftLint fixes |
 | `make lint` | Run strict SwiftFormat and SwiftLint checks |
 | `make check` | Run validation, lint, tests, and SwiftPM compilation |
-| `make release-check` | Add workflow tests to the complete automated distribution preflight |
+| `make release-check` | Run the complete preflight, including hardened release assembly and verification |
 | `make icon PNG=icon.png` | Create `build/AppIcon.icns` from a 1024×1024 PNG |
 | `CERT_NAME='Developer ID Application: …' NOTARY_PROFILE=starter-notary make dist VERSION=1.0.0` | Run the release preflight, then create a signed, notarised, stapled, verified-checksum release |
 | `make clean` | Remove `.build`, `build`, and `dist` |
@@ -86,6 +90,8 @@ Tests/AppCoreTests/                   Swift Testing domain/model coverage
 Resources/Info.plist                  application metadata template
 Config/Starter.entitlements           sandbox and user-selected file access
 scripts/build-macos-app.sh            .app assembly and local signing
+scripts/harden-macos-binary.sh        release symbol redaction, dSYM preservation, and stripping
+scripts/verify-macos-hardening.sh      Mach-O release-hardening verification
 scripts/release-macos.sh              Developer ID release and notarisation
 docs/                                 architecture, design, testing, and release contracts
 .pi/skills/                           project-local implementation guidance

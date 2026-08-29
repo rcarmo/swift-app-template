@@ -23,6 +23,8 @@ Ask when the feature needs access, not in a launch-time prompt cascade. A pre-pr
 
 Store tokens and passwords in Keychain with minimal access groups. Inject a credential service so tests can use a fake. Never embed a service secret in a client application; use user credentials or a scoped backend-issued token. Redact logs and error payloads.
 
+Release stripping and symbol redaction can slow casual analysis but do not protect embedded secrets or replace server-side authorisation. Runtime metadata, strings, resources, protocols, and behaviour may remain recoverable from a signed client.
+
 ## Files and sandbox
 
 Prefer SwiftUI import/export APIs for ordinary user-selected files; use `NSOpenPanel`/`NSSavePanel` only when their additional controls are required. Keep `com.apple.security.files.user-selected.read-write` only while this behaviour exists. Read imported URLs while security-scoped access is active. Persist security-scoped bookmarks only when durable access is needed, balance access calls, and recover from stale or moved bookmarks. Do not assume arbitrary filesystem access in the sandbox.

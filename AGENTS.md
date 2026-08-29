@@ -6,7 +6,7 @@ This repository is a macOS 26 SwiftUI application built with Swift Package Manag
 
 - `Package.swift` defines the `AppCore` library, `Starter` executable product, deployment target, and tests.
 - `Sources/Application/StarterApp.swift` owns scene and dependency composition.
-- `Resources/Info.plist` is a template. `scripts/build-macos-app.sh` substitutes the application name, bundle identifier, version, and build number when it assembles the `.app`.
+- `Resources/Info.plist` is a template. `scripts/build-macos-app.sh` substitutes the application name, bundle identifier, version, and build number when it assembles the `.app`; release assembly preserves a private dSYM, strips the distributed executable, signs it, and verifies the hardening result.
 - `Config/Starter.entitlements` defines sandbox and capability settings.
 - The build has no Xcode project, XcodeGen step, `xcodebuild` call, or package-manager bootstrap.
 - Build output, certificates, provisioning profiles, keychains, and notarisation credentials stay outside Git.
@@ -56,9 +56,10 @@ make lint
 make test
 make package-build
 make build
+make hardening-check
 ```
 
-`make build` requires macOS and verifies app assembly plus code signing. `make workflow-test` uses stubs and provides no compilation evidence.
+`make build` requires macOS and verifies app assembly plus code signing. `make hardening-check` additionally verifies release optimisation, symbol/debug stripping, and private dSYM UUID matching. `make workflow-test` uses stubs and provides no compilation evidence.
 
 For a rename change, run the helper in a disposable copy and check for stale placeholder names. For a release change, verify tag/version handling, signing order, notarisation archive order, final checksum contents, and downloaded-asset verification.
 
@@ -69,5 +70,6 @@ For a rename change, run the helper in a disposable copy and check for stale pla
 - Keyboard, focus, window resizing, and accessibility have been reviewed where affected.
 - `Package.swift`, bundle metadata, Xcode/Swift requirements, commands, and documentation agree.
 - No build output, generated project, secret, certificate, or profile is committed.
+- Private dSYMs remain outside Git and public distribution archives.
 - `./scripts/check-skills.sh` passes.
 - `NOTICE.md` records any new implementation or substantial guidance source.

@@ -27,6 +27,8 @@ APP_NAME="$app_name" PRODUCT_NAME="$product_name" BUNDLE_ID="$bundle_id" \
 codesign --force --options runtime --timestamp --sign "$CERT_NAME" \
   --entitlements "Config/$app_name.entitlements" "$app"
 codesign --verify --deep --strict --verbose=2 "$app"
+./scripts/verify-macos-hardening.sh \
+  "$app/Contents/MacOS/$app_name" "build/Symbols/$app_name.app.dSYM"
 ditto -c -k --keepParent "$app" "$notary_zip"
 xcrun notarytool submit "$notary_zip" --keychain-profile "$NOTARY_PROFILE" --wait
 xcrun stapler staple "$app"

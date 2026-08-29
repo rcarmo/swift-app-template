@@ -84,6 +84,10 @@ Cancellation is not a user-visible failure. `AppModel.reload()` restores an idle
 
 SwiftPM compiles the executable. `scripts/build-macos-app.sh` creates the `.app`, substitutes name, bundle identifier, version and build metadata, copies resource bundles and the optional icon, then signs the complete bundle.
 
+Release assembly adds cross-module optimisation and linker dead stripping. Before signing, it creates a private UUID-matched dSYM outside the application bundle, removes debug and local symbols, removes Swift nlist symbols, and empties the Mach-O nlist string table. Runtime-required exports and Swift metadata remain intact. Debug builds remain unstripped.
+
+This raises the cost of casual static analysis but is not a secrecy boundary. Swift/Objective-C runtime metadata, user-visible strings, resources, protocols, and executable behaviour may remain discoverable. Never ship credentials or rely on obfuscation to enforce authorisation.
+
 The current bundler handles one executable plus SwiftPM resource bundles. Add explicit inside-out signing and embedding rules before introducing frameworks, helpers, extensions, XPC services, or plug-ins.
 
 A future iPadOS application should consume `AppCore` only when that product phase starts. It must supply its own bundle, capabilities, scenes, and platform-specific composition.

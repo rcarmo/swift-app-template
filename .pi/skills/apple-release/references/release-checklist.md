@@ -22,6 +22,7 @@
 - SwiftFormat and SwiftLint pass; both are required by `make release-check` and `make dist`.
 - SwiftPM tests and release executable compilation pass.
 - The real `.app` assembles on macOS; plist substitution, resources, executable, entitlements, and signature are inspected.
+- The shipped executable has no nlist symbols or debug sections; its private dSYM exists outside the app and has matching architecture UUIDs.
 - Accessibility, localisation, denied-permission, offline, migration, update, and first-launch checks relevant to the product are recorded.
 
 ## Credential routes
@@ -45,15 +46,17 @@ plutil -p App.app/Contents/Info.plist
 ## Notarisation order
 
 1. build and assemble the application;
-2. sign with Developer ID, hardened runtime, and timestamp;
-3. verify the signature;
-4. create a temporary notarisation archive;
-5. submit and wait; inspect the notary log if rejected;
-6. staple and validate the application;
-7. run `spctl --assess`;
-8. create a fresh distribution archive;
-9. write and verify the checksum;
-10. extract and launch the final archive on another Mac.
+2. preserve the private dSYM and verify its UUIDs;
+3. strip and verify symbol/debug data in the distributed executable;
+4. sign with Developer ID, hardened runtime, and timestamp;
+5. verify the signature and hardening again;
+6. create a temporary notarisation archive;
+7. submit and wait; inspect the notary log if rejected;
+8. staple and validate the application;
+9. run `spctl --assess`;
+10. create a fresh distribution archive;
+11. write and verify the checksum;
+12. extract and launch the final archive on another Mac.
 
 ## Scope and provenance
 

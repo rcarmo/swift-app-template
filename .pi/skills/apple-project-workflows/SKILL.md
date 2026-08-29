@@ -15,7 +15,7 @@ Read `Package.swift`, `Makefile`, `.github/workflows/`, scripts, and `references
 
 - `Package.swift` defines the `AppCore` library, `Starter` executable, deployment version, and tests.
 - `Resources/Info.plist` and `Config/Starter.entitlements` define macOS bundle metadata and capabilities.
-- `scripts/build-macos-app.sh` assembles and signs the SwiftPM executable as a macOS `.app`.
+- `scripts/build-macos-app.sh` assembles and signs the SwiftPM executable as a macOS `.app`; release mode also preserves private symbols, strips the copied Mach-O, and verifies hardening.
 - `Makefile` is the documented front door.
 - No Xcode project, XcodeGen, `xcodebuild`, or package-manager bootstrap is part of the build contract.
 
@@ -27,7 +27,7 @@ Read `Package.swift`, `Makefile`, `.github/workflows/`, scripts, and `references
 4. Update metadata, entitlements, rename/icon/static-check scripts together.
 5. Run a rename simulation in a disposable copy after template-identity changes.
 6. Update README, AGENTS, docs, skills, and workflows together.
-7. Run `make validate`, `make workflow-test`, SwiftPM tests/build, and macOS bundle assembly as the host permits; distinguish their evidence.
+7. Run `make validate`, `make workflow-test`, SwiftPM tests/build, macOS bundle assembly, and `make hardening-check` as the host permits; distinguish their evidence.
 
 ## Guardrails
 

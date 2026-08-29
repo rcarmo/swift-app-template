@@ -4,6 +4,7 @@ set -euo pipefail
 required=(Package.swift Makefile README.md NOTICE.md AGENTS.md VERSION Resources/Info.plist \
   Config/Starter.entitlements Sources/Application/StarterApp.swift \
   Sources/AppCore/Application/AppModel.swift scripts/build-macos-app.sh \
+  scripts/harden-macos-binary.sh scripts/verify-macos-hardening.sh \
   .github/workflows/ci.yml.disabled .github/workflows/release.yml.disabled \
   .github/workflows/prune-actions-artifacts.yml.disabled)
 for file in "${required[@]}"; do
@@ -35,12 +36,44 @@ app_entry_count="$(find Sources/Application -type f -name '*App.swift' -print | 
 while IFS= read -r script; do bash -n "$script"; done < <(find scripts -type f -name '*.sh' -print)
 ./scripts/check-skills.sh
 
-for target in build package-build test check release-check workflow-test run install register dist rename; do
+for target in build package-build test check release-check hardening-check verify-hardening workflow-test run install register dist rename; do
   grep -q "^$target:" Makefile || { echo "error: missing Makefile target: $target" >&2; exit 1; }
 done
 
-grep -q '^release-check: validate workflow-test lint test package-build$' Makefile || {
+grep -q '^release-check: validate workflow-test lint test package-build hardening-check$' Makefile || {
   echo "error: release-check must run the complete automated distribution preflight" >&2
+  exit 1
+}
+grep -q '^RELEASE_SWIFT_FLAGS ?= -Xswiftc -cross-module-optimization$' Makefile || {
+  echo "error: Makefile must enable release cross-module optimisation" >&2
+  exit 1
+}
+grep -q '^RELEASE_LINKER_FLAGS ?= -Xlinker -dead_strip$' Makefile || {
+  echo "error: Makefile must enable release linker dead stripping" >&2
+  exit 1
+}
+grep -q '^release: build$' Makefile || {
+  echo "error: release must assemble the application before verification" >&2
+  exit 1
+}
+grep -q 'verify-macos-hardening.sh "$(RELEASE_EXECUTABLE)" "$(RELEASE_DSYM)"' Makefile || {
+  echo "error: Makefile must expose release-hardening verification" >&2
+  exit 1
+}
+grep -q 'strip -S -x -T -N -no_code_signature_warning' scripts/harden-macos-binary.sh || {
+  echo "error: release hardening must remove debug, local, and nlist symbol data" >&2
+  exit 1
+}
+grep -q 'xcrun dsymutil' scripts/harden-macos-binary.sh || {
+  echo "error: release hardening must preserve a private dSYM before stripping" >&2
+  exit 1
+}
+grep -q 'scripts/harden-macos-binary.sh' scripts/build-macos-app.sh || {
+  echo "error: release app assembly must invoke binary hardening" >&2
+  exit 1
+}
+grep -q 'scripts/verify-macos-hardening.sh' scripts/release-macos.sh || {
+  echo "error: release packaging must verify binary hardening before notarisation" >&2
   exit 1
 }
 grep -q '^release-check: CONFIGURATION := release$' Makefile || {

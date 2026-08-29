@@ -11,6 +11,8 @@ version="${VERSION:-$(head -n 1 VERSION)}"
 build_number="${BUILD_NUMBER:-$(date -u +%Y%m%d%H%M)}"
 sign_identity="${SIGN_IDENTITY:--}"
 output_dir="${OUTPUT_DIR:-build}"
+release_swift_flags="${RELEASE_SWIFT_FLAGS:--Xswiftc -cross-module-optimization}"
+release_linker_flags="${RELEASE_LINKER_FLAGS:--Xlinker -dead_strip}"
 app="$output_dir/$app_name.app"
 info_plist="${INFO_PLIST:-Resources/Info.plist}"
 entitlements="${ENTITLEMENTS:-Config/$app_name.entitlements}"
@@ -27,7 +29,12 @@ icon="${APP_ICON:-build/AppIcon.icns}"
 [[ -f "$info_plist" ]] || { echo "error: missing $info_plist" >&2; exit 1; }
 [[ -f "$entitlements" ]] || { echo "error: missing $entitlements" >&2; exit 1; }
 
-swift build --product "$product_name" --configuration "$configuration"
+swift_build_arguments=(build --product "$product_name" --configuration "$configuration")
+if [[ "$configuration" == "release" ]]; then
+  read -r -a release_build_arguments <<< "$release_swift_flags $release_linker_flags"
+  swift_build_arguments+=("${release_build_arguments[@]}")
+fi
+swift "${swift_build_arguments[@]}"
 bin_path="$(swift build --product "$product_name" --configuration "$configuration" --show-bin-path)"
 executable="$bin_path/$product_name"
 [[ -x "$executable" ]] || { echo "error: executable not found at $executable" >&2; exit 1; }
@@ -35,6 +42,7 @@ executable="$bin_path/$product_name"
 rm -rf "$app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$executable" "$app/Contents/MacOS/$app_name"
+packaged_executable="$app/Contents/MacOS/$app_name"
 sed \
   -e "s|<string>Starter</string>|<string>$app_name</string>|g" \
   -e "s|<string>com.example.starter</string>|<string>$bundle_id</string>|g" \
@@ -51,7 +59,16 @@ if [[ -f "$icon" ]]; then
   cp "$icon" "$app/Contents/Resources/AppIcon.icns"
 fi
 
+if [[ "$configuration" == "release" ]]; then
+  ./scripts/harden-macos-binary.sh \
+    "$packaged_executable" "$output_dir/Symbols/$app_name.app.dSYM"
+fi
+
 codesign --force --sign "$sign_identity" --entitlements "$entitlements" "$app"
 codesign --verify --strict --verbose=2 "$app"
+if [[ "$configuration" == "release" ]]; then
+  ./scripts/verify-macos-hardening.sh \
+    "$packaged_executable" "$output_dir/Symbols/$app_name.app.dSYM"
+fi
 plutil -lint "$app/Contents/Info.plist" >/dev/null
 printf 'Created %s\n' "$app"

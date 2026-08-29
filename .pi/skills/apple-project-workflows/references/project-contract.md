@@ -25,8 +25,9 @@ The bundler must:
 3. copy the executable under the app name;
 4. substitute the application name, bundle identifier, marketing version, and build number into `Info.plist`;
 5. copy SwiftPM resource bundles and optional `AppIcon.icns`;
-6. install `PkgInfo` and sign the complete bundle with entitlements;
-7. verify the signature and plist.
+6. for release builds, preserve a private UUID-matched dSYM and remove debug/local/nlist symbol data from the copied executable;
+7. install `PkgInfo` and sign the complete bundle with entitlements;
+8. verify hardening, the signature, and the plist.
 
 ## Rename and icon helpers
 
@@ -36,7 +37,7 @@ The icon helper accepts a 1024-square source and generates `build/AppIcon.icns`.
 
 ## Workflow tests
 
-`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired and SwiftPM build failures propagate. It also proves these routes do not invoke Xcode project tooling or a package-manager bootstrap. This is orchestration evidence, not compilation.
+`make workflow-test` uses temporary stubs to prove package build/test/lint commands are wired, SwiftPM build failures propagate, and the Make release plan passes the required optimisation/dead-strip flags plus hardening verification. It also proves these routes do not invoke Xcode project tooling or a package-manager bootstrap. This is orchestration evidence, not compilation.
 
 ## Continuous integration
 

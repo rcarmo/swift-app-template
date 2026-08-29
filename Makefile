@@ -7,11 +7,15 @@ BUNDLE_ID ?= com.example.starter
 CONFIGURATION ?= debug
 VERSION ?= $(shell head -n 1 VERSION 2>/dev/null)
 NOTARY_PROFILE ?= starter-notary
+RELEASE_SWIFT_FLAGS ?= -Xswiftc -cross-module-optimization
+RELEASE_LINKER_FLAGS ?= -Xlinker -dead_strip
 APP := build/$(APP_NAME).app
+RELEASE_EXECUTABLE := $(APP)/Contents/MacOS/$(APP_NAME)
+RELEASE_DSYM := build/Symbols/$(APP_NAME).app.dSYM
 LSREGISTER := /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister
 
-.PHONY: help doctor quality-tools check release-check validate skills workflow-test format lint test package-build \
-        build release run install uninstall register icon notary-setup dist clean rename
+.PHONY: help doctor quality-tools check release-check hardening-check verify-hardening validate skills workflow-test \
+        format lint test package-build build release run install uninstall register icon notary-setup dist clean rename
 
 help:
 	@echo "SwiftPM workflows (macOS):"
@@ -20,6 +24,8 @@ help:
 	@echo "  make test             Run AppCore tests with SwiftPM"
 	@echo "  make check            Validate, lint, test, and compile"
 	@echo "  make release-check    Run every automated preflight for distribution"
+	@echo "  make hardening-check  Build and verify a stripped release application"
+	@echo "  make verify-hardening Verify the current release app and private dSYM"
 	@echo "  make run              Build and launch the app"
 	@echo "  make install          Install the app in /Applications"
 	@echo "  make uninstall        Remove it from /Applications"
@@ -36,7 +42,7 @@ help:
 	@echo ""
 	@echo "Distribution:"
 	@echo "  make notary-setup     Store notarization credentials in Keychain"
-	@echo "  make dist             Sign, notarize, staple, and checksum a zip"
+	@echo "  make dist             Sign, notarise, staple, and checksum a zip"
 	@echo "  make clean"
 
 doctor:
@@ -56,7 +62,13 @@ quality-tools:
 check: validate lint test package-build
 
 release-check: CONFIGURATION := release
-release-check: validate workflow-test lint test package-build
+release-check: validate workflow-test lint test package-build hardening-check
+
+hardening-check: CONFIGURATION := release
+hardening-check: release
+
+verify-hardening: doctor
+	./scripts/verify-macos-hardening.sh "$(RELEASE_EXECUTABLE)" "$(RELEASE_DSYM)"
 
 validate:
 	./scripts/static-checks.sh
@@ -83,10 +95,13 @@ package-build:
 
 build: doctor
 	APP_NAME="$(APP_NAME)" PRODUCT_NAME="$(PRODUCT_NAME)" BUNDLE_ID="$(BUNDLE_ID)" \
-	  CONFIGURATION="$(CONFIGURATION)" VERSION="$(VERSION)" ./scripts/build-macos-app.sh
+	  CONFIGURATION="$(CONFIGURATION)" VERSION="$(VERSION)" \
+	  RELEASE_SWIFT_FLAGS="$(RELEASE_SWIFT_FLAGS)" RELEASE_LINKER_FLAGS="$(RELEASE_LINKER_FLAGS)" \
+	  ./scripts/build-macos-app.sh
 
 release: CONFIGURATION := release
 release: build
+	./scripts/verify-macos-hardening.sh "$(RELEASE_EXECUTABLE)" "$(RELEASE_DSYM)"
 
 run: build
 	open "$(APP)"
